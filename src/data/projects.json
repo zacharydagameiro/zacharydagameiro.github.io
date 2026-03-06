@@ -16,6 +16,20 @@
       "GCP",
       "LLM"
     ],
+    "stackGroups": [
+      {
+        "label": "Backend",
+        "items": ["Python"]
+      },
+      {
+        "label": "AI / Data",
+        "items": ["PaddleOCR", "LLM"]
+      },
+      {
+        "label": "Infra",
+        "items": ["Cloud Run", "Docker", "GCP"]
+      }
+    ],
     "valueProp": "Fast, low-cost receipt-to-JSON extraction: OCR on Cloud Run plus layout reconstruction enables small-LLM parsing without multimodal overhead.",
     "status": "Prototype",
     "highlights": [
@@ -111,6 +125,20 @@
       "Capacitors & wiring",
       "Mini I/O switch",
       "Soldering + assembly"
+    ],
+    "stackGroups": [
+      {
+        "label": "Software",
+        "items": ["TI-BASIC", "Arduino C/C++"]
+      },
+      {
+        "label": "Hardware",
+        "items": ["Arduino Nano", "nRF24L01 Transceiver", "Capacitors & wiring", "Mini I/O switch"]
+      },
+      {
+        "label": "Tools",
+        "items": ["Soldering + assembly"]
+      }
     ],
     "valueProp": "Turn stock TI-84 calculators into portable wireless chat devices with custom embedded hardware and firmware.",
     "status": "Prototype",
@@ -349,21 +377,107 @@
   {
     "slug": "haulr-concrete-fleet",
     "title": "Haulr",
-    "caption": "Concrete Ordering & Fleet Management Dashboard",
-    "shortDescription": "Built a React + shadcn/ui dashboard for concrete ordering and delivery coordination.",
-    "description": "Built a customer-facing dashboard for concrete ordering and delivery coordination using React and shadcn/ui. Designed domain-specific controls for slump and set-delay/retarder dosage and mirrored real dispatch workflows so customers and ops see the same state.",
-    "longDescription": "Haulr is a concrete ordering and fleet management app with a customer dashboard UI, built around letting customers specify concrete mix and delivery requirements and managing deliveries and trucks on the ops side. Built the customer-facing dashboard with React and shadcn/ui (Tailwind + Radix-style components). Designed concrete \"slump\" input UI with quick-select pills for common values (e.g. 25–200 mm) plus \"Other\" numeric input and helper text; and set delay/retarder dosage input expressed as % of cement weight (0–3%, 0.1% steps) with the same preset + \"Other\" pattern. Dev workflow used VS Code and GitHub Copilot with AI-assisted scaffolding for components, forms, validation, and dashboard UI; explored a custom MCP server so Copilot/AI tools could generate code aware of Haulr-specific data and logic (job lists, truck locations, Firebase operations).",
-    "year": "2025",
+    "caption": "Concrete Operations Platform",
+    "coverImageUrl": "/covers/haulr.jpg",
+    "shortDescription": "Built a multi-app concrete ordering and delivery platform with customer quoting, operations workflows, and real-time cost tracking.",
+    "description": "Haulr is a concrete operations platform spanning lead capture, quoting, job execution, and cost visibility. I built the product as a multi-app system (site, dashboard, admin) with a role-aware company model and production-ready workflow components for teams handling real deliveries.",
+    "longDescription": "Designed and built Haulr as a full-stack concrete logistics product with three app surfaces: customer site, operations dashboard, and admin tools. The dashboard supports company onboarding, lead intake, claim/archive workflows, job creation, materials/labour/expense tracking, scheduling, and client management. The backend uses callable function workflows, geocoding, and billing integrations, with a current backend modernization path underway to harden schema/migrations and improve long-term reliability.",
+    "demoNote": "Demo account resets every 24 hours. Email: demo@haulrbc.com | Password: 124haurMe. Feel free to explore and create users; please avoid major changes.",
+    "year": "2026",
+    "stack": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Firebase Auth",
+      "Firestore",
+      "Firebase Cloud Functions",
+      "Stripe",
+      "Mapbox"
+    ],
+    "stackGroups": [
+      {
+        "label": "Frontend",
+        "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui"]
+      },
+      {
+        "label": "Backend",
+        "items": ["Firebase Auth", "Firestore", "Firebase Cloud Functions"]
+      },
+      {
+        "label": "Integrations",
+        "items": ["Stripe", "Mapbox"]
+      }
+    ],
+    "valueProp": "Purpose-built concrete workflow software: move from request to scheduled work with shared visibility across sales, ops, and field teams.",
+    "status": "Active rebuild",
+    "highlights": [
+      "Built a multi-tenant company model with memberships, roles, groups, and capability-based access controls",
+      "Implemented end-to-end lead lifecycle flows including create, update, claim, archive, and assignment paths",
+      "Shipped job-level operating tools for materials, labour, schedule events, expenses, files, and inventory allocation",
+      "Designed concrete-specific UI controls (slump, delay/retarder dosage, request detail patterns) for real operator workflows",
+      "Integrated billing flows and subscription state handling with Stripe-backed checkout and portal flows"
+    ],
+    "architectureNotes": [
+      "Multi-app architecture separates public acquisition, operations, and admin responsibilities",
+      "Backend callable workflows enforce business logic around company ownership, capability checks, and sensitive mutations",
+      "Data model supports both company-scoped operational records and user-scoped working datasets",
+      "Geocoding and billing integrations are treated as first-class parts of the workflow, not bolt-ons",
+      "Demo access (resets every 24 hours): Email: demo@haulrbc.com | Password: 124haurMe. You are welcome to explore and create users; please avoid making major changes."
+    ],
+    "challenges": [
+      "Balancing fast product iteration with schema consistency across evolving operational features",
+      "Maintaining clear permission boundaries across owners, members, and specialized role scopes",
+      "Reconciling legacy and newer data paths during ongoing backend modernization",
+      "Designing UI that is concrete-domain specific without sacrificing usability on mobile"
+    ],
+    "results": [
+      {
+        "label": "Scope delivered",
+        "value": "Multi-app, end-to-end concrete operations workflow"
+      },
+      {
+        "label": "Backend capability",
+        "value": "Role-aware company model with callable workflow enforcement"
+      },
+      {
+        "label": "Operational coverage",
+        "value": "Leads, jobs, scheduling, labour, materials, expenses, and billing in one system"
+      },
+      {
+        "label": "Product direction",
+        "value": "Actively hardening backend architecture for production-grade reliability"
+      }
+    ],
+    "nextSteps": [
+      "Complete backend migration hardening with stricter policy enforcement",
+      "Unify remaining legacy request paths into a single canonical lead pipeline",
+      "Expand dispatch and fleet-side execution tooling for live operations",
+      "Add deeper analytics around conversion, margin, and utilization"
+    ],
     "tags": [
       "React",
-      "shadcn/ui",
-      "Tailwind",
-      "Dashboard"
+      "TypeScript",
+      "Firebase",
+      "Operations",
+      "SaaS"
+    ],
+    "screenshots": [
+      {
+        "src": "/media/haulr-img1.jpg",
+        "type": "image",
+        "caption": "Haulr dashboard UI preview"
+      }
     ],
     "repoUrl": null,
-    "demoUrl": null,
-    "featured": false,
-    "category": "freelance"
+    "demoUrl": {
+      "label": "Live Dashboard",
+      "url": "https://dashboard.haulrbc.com"
+    },
+    "featured": true,
+    "category": "freelance",
+    "categories": ["freelance", "web", "product"]
   },
   {
     "slug": "meiro-tigan",

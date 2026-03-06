@@ -52,11 +52,14 @@
     }
   ],
   "experience": [
-    { "title": "Retail Associate", "company": "BCLDB", "logoUrl": "/logos/bcldb-logo.jpg", "dates": "June 2025 – Current", "description": "Handled regulated products, inventory tracking, and customer verification. Operated under strict compliance and cash-handling procedures." },
-    { "title": "Sales Associate", "company": "Sherwood Park Toyota", "logoUrl": "/logos/toyota-logo.jpg", "dates": "Summer 2025", "description": "Managed online vehicle sales and customer correspondence. Customer-facing sales and contracts in a high-volume dealership." },
-    { "title": "Construction Labourer", "company": "Various Sites", "dates": "Summers 2020–2024", "description": "Performed physically demanding work including scaffolding, concrete, and site setup. Worked long shifts in safety-critical environments requiring reliability and teamwork." },
-    { "title": "Lifeguard & Swim Instructor", "company": "YMCA", "logoUrl": "/logos/ymca-logo.jpg", "dates": "2018–2020", "description": "Ensured public safety and emergency response in regulated aquatic facilities. Instructed children and adults; maintained certifications and safety compliance." },
-    { "title": "Grounds Crew", "company": "Golf Course", "dates": "Summer 2020", "description": "Maintained course grounds and facilities under early-morning and time-critical schedules. Operated equipment and followed safety procedures in outdoor work environments." }
+    { "title": "Consultant", "company": "BCLDB", "logoUrl": "/logos/bcldb-logo.jpg", "dates": "Aug 2025 – Present", "description": "Handled regulated products, inventory tracking, and customer verification. Operated under strict compliance and cash-handling procedures." },
+    { "title": "Online Sales & Marketing", "company": "Sherwood Park Toyota", "logoUrl": "/logos/toyota-logo.jpg", "dates": "May 2024 – Aug 2024", "description": "Managed online vehicle sales and customer correspondence. Customer-facing sales and contracts in a high-volume dealership." },
+    { "title": "General Labourer", "company": "Fluor Corporation", "logoUrl": "/logos/fluor-logo.svg", "dates": "Sep 2020 – Jan 2024", "description": "Worked seasonal stints in Kitimat on a major industrial project: Sep 2020–Jan 2021, May 2021–Aug 2021, May 2022–Aug 2022, and May 2023–Jan 2024. Performed safety-critical site work including scaffolding, concrete, and setup." },
+    { "title": "Apprentice Scaffolder", "company": "Industrial Scaffold Services L.P.", "logoUrl": "/logos/industrial-scaffold-logo.svg", "dates": "Nov 2022 – Apr 2023", "description": "Supported scaffold construction and teardown in active industrial environments while following strict safety and procedural requirements." },
+    { "title": "Line Cook", "company": "JOEY Restaurant Group", "logoUrl": "/logos/joey-logo.svg", "dates": "Jan 2021 – Apr 2022", "description": "Worked in a high-volume kitchen environment while maintaining food quality, pace, and station consistency during peak service." },
+    { "title": "Dish Washer", "company": "JOEY Restaurant Group", "logoUrl": "/logos/joey-logo.svg", "dates": "Nov 2021 – Jan 2022", "description": "Supported back-of-house operations by maintaining sanitation standards and keeping service flow reliable during busy shifts." },
+    { "title": "Lifeguard", "company": "YMCA of Northern Alberta", "logoUrl": "/logos/ymca-logo.jpg", "dates": "Sep 2019 – Jun 2020", "description": "Ensured swimmer safety, monitored facilities, and executed emergency response procedures in regulated aquatic environments." },
+    { "title": "Swim Instructor", "company": "YMCA of Northern Alberta", "logoUrl": "/logos/ymca-logo.jpg", "dates": "Sep 2018 – Jun 2020", "description": "Taught swim lessons to children and adults while maintaining instructional quality, safety compliance, and clear communication." }
   ],
   "skills": {
     "Software": ["Python", "C/C++", "JavaScript", "TI-BASIC", "SQL"],

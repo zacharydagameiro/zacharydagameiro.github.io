@@ -49,6 +49,41 @@ const getProjectLinkLabel = (link, fallbackType = 'link') => {
   return 'Open link'
 }
 
+const normalizeStackGroups = ({ stackGroups, stack, tags }) => {
+  const normalizeEntries = (entries) =>
+    entries
+      .map((entry, index) => {
+        const label =
+          typeof entry?.label === 'string' && entry.label.trim().length > 0
+            ? entry.label.trim()
+            : `Stack ${index + 1}`
+        const items = Array.isArray(entry?.items)
+          ? Array.from(new Set(entry.items.filter((item) => typeof item === 'string' && item.trim().length > 0)))
+          : []
+        return { label, items }
+      })
+      .filter((entry) => entry.items.length > 0)
+
+  if (Array.isArray(stackGroups) && stackGroups.length > 0) {
+    return normalizeEntries(stackGroups)
+  }
+
+  if (stackGroups && typeof stackGroups === 'object') {
+    const groupedEntries = Object.entries(stackGroups).map(([label, items]) => ({ label, items }))
+    return normalizeEntries(groupedEntries)
+  }
+
+  if (Array.isArray(stack) && stack.length > 0) {
+    return [{ label: 'Stack', items: Array.from(new Set(stack.filter((item) => typeof item === 'string'))) }]
+  }
+
+  if (Array.isArray(tags) && tags.length > 0) {
+    return [{ label: 'Tags', items: Array.from(new Set(tags.filter((item) => typeof item === 'string'))) }]
+  }
+
+  return []
+}
+
 export default function ProjectPage() {
   const { slug } = useParams()
   const location = useLocation()
@@ -231,6 +266,7 @@ export default function ProjectPage() {
     shortDescription,
     longDescription,
     description,
+    demoNote,
     motivation,
     year,
     tags,
@@ -239,6 +275,7 @@ export default function ProjectPage() {
     category,
     valueProp,
     stack,
+    stackGroups,
     status,
     highlights,
     architectureSteps,
@@ -318,15 +355,20 @@ export default function ProjectPage() {
   const caseStudyLinkLabel = getProjectLinkLabel(caseStudyLink, 'case-study')
   const problemText = longDescription || description || shortDescription
   const heroValueProp = valueProp || shortDescription
-
-  const primaryStack =
-    Array.isArray(stack) && stack.length > 0 ? stack.join(', ') : tags?.length ? tags.slice(0, 3).join(', ') : ''
+  const normalizedStackGroups = useMemo(
+    () => normalizeStackGroups({ stackGroups, stack, tags }),
+    [stackGroups, stack, tags]
+  )
+  const primaryStack = useMemo(() => {
+    if (normalizedStackGroups.length === 0) return ''
+    if (normalizedStackGroups.length > 1) return normalizedStackGroups.map((group) => group.label).join(', ')
+    const items = normalizedStackGroups[0].items
+    if (items.length <= 4) return items.join(', ')
+    return `${items.slice(0, 4).join(', ')}, +${items.length - 4} more`
+  }, [normalizedStackGroups])
 
   const quickFacts = []
   if (primaryStack) quickFacts.push({ label: 'Stack', value: primaryStack })
-
-  const sidebarStackItems =
-    Array.isArray(stack) && stack.length > 0 ? stack : Array.isArray(tags) && tags.length > 0 ? tags : []
   const hasArchitecture =
     (Array.isArray(architectureSteps) && architectureSteps.length > 0) ||
     (Array.isArray(architectureNotes) && architectureNotes.length > 0)
@@ -531,7 +573,7 @@ export default function ProjectPage() {
 
         <div>
           {/* Keep the overlap look only on sm+ */}
-          <div className="mt-6 sm:-mt-8">
+          <div className="mt-10 sm:-mt-4">
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_288px]">
               <div className="space-y-6">
                 <div className="space-y-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
@@ -772,7 +814,15 @@ export default function ProjectPage() {
                     </SidebarSection>
                   )}
 
-                  <SidebarSection title="Project info" icon={<SectionIcon type="info" />} divider={sidebarLinks.length > 0}>
+                  {demoNote && (
+                    <SidebarSection title="Demo access" icon={<SectionIcon type="info" />} divider={sidebarLinks.length > 0}>
+                      <p className="mt-2 rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-sm leading-relaxed text-sky-900">
+                        {demoNote}
+                      </p>
+                    </SidebarSection>
+                  )}
+
+                  <SidebarSection title="Project info" icon={<SectionIcon type="info" />} divider={sidebarLinks.length > 0 || Boolean(demoNote)}>
                     <dl className="mt-2 space-y-1 text-sm text-slate-600">
                       {status && (
                         <div className="flex items-center justify-between">
@@ -788,22 +838,35 @@ export default function ProjectPage() {
                       )}
                     </dl>
                   </SidebarSection>
-
-                  {sidebarStackItems.length > 0 && (
-                    <SidebarSection title="Stack" icon={<SectionIcon type="skills" />}>
-                      <ul className="mt-2 flex flex-wrap gap-1.5">
-                        {sidebarStackItems.map((item) => (
-                          <li
-                            key={item}
-                            className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
-                          >
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </SidebarSection>
-                  )}
                 </SidebarCard>
+
+                {normalizedStackGroups.length > 0 && (
+                  <SidebarCard className="min-w-0">
+                    <SidebarSection title="Stack" icon={<SectionIcon type="skills" />} divider={false}>
+                      <div className="mt-2 space-y-3">
+                        {normalizedStackGroups.map((group, groupIndex) => (
+                          <div key={`${group.label}-${groupIndex}`}>
+                            {normalizedStackGroups.length > 1 && (
+                              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                                {group.label}
+                              </p>
+                            )}
+                            <ul className="flex flex-wrap gap-1.5">
+                              {group.items.map((item) => (
+                                <li
+                                  key={`${group.label}-${groupIndex}-${item}`}
+                                  className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+                                >
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </SidebarSection>
+                  </SidebarCard>
+                )}
               </aside>
             </div>
 
