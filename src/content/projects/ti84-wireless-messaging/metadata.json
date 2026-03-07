@@ -1,0 +1,37 @@
+{
+  "title": "TI-84 Wireless Messaging",
+  "caption": "Embedded calculator messaging system",
+  "coverImageUrl": "/projects/ti84-wireless-messaging/cover.jpg",
+  "shortDescription": "Built wireless messaging between TI-84 calculators using embedded Arduino + RF hardware.",
+  "motivation": "I noticed TI-84 calculators have TRS link ports and started digging into what they could do. After learning they are mainly used to share charts/data, I found a driver online that let TI-BASIC read from and write to the TRS cable directly. That inspired me to build a minimal chat interface and message protocol. The key idea was simple: if I can transmit messages over a wire, I can replace the wire with RF and make calculator-to-calculator wireless messaging.",
+  "year": "2020",
+  "valueProp": "Turn stock TI-84 calculators into portable wireless chat devices with custom embedded hardware and firmware.",
+  "status": "Prototype",
+  "stackGroups": [
+    { "label": "Software", "items": ["TI-BASIC", "Arduino C/C++"] },
+    { "label": "Hardware", "items": ["Arduino Nano", "nRF24L01 Transceiver", "Capacitors & wiring", "Mini I/O switch"] },
+    { "label": "Tools", "items": ["Soldering + assembly"] }
+  ],
+  "screenshots": [
+    {
+      "src": "/projects/ti84-wireless-messaging/media/ti84-wireless-mov1.mp4",
+      "type": "video",
+      "caption": "TI-84 wireless messaging demo"
+    }
+  ],
+  "tags": ["Arduino", "C/C++", "TI-BASIC", "Embedded"],
+  "repoUrl": null,
+  "demoUrl": {
+    "label": "Reddit Demo",
+    "url": "https://www.reddit.com/r/ti84hacks/comments/f5k8x1/wireless_communication/"
+  },
+  "featured": true,
+  "category": "school",
+  "references": [
+    {
+      "label": "Merthsoft TI-83+/84+ Link Guide",
+      "href": "https://merthsoft.com/linkguide/ti83+/index.html",
+      "note": "Primary reference used to understand the link protocol and shape the message transport implementation."
+    }
+  ]
+}

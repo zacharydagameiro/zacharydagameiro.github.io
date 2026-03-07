@@ -1,0 +1,18 @@
+{
+  "title": "Ferry Terminal Booker",
+  "caption": "File-backed reservation system (C)",
+  "coverImageUrl": "/projects/bc-ferries-terminal-booker/cover.jpg",
+  "shortDescription": "Built a C-based terminal reservation system for a mock BC Ferries client using file storage (no database) with search, edit/delete, payments, and occupancy checks.",
+  "year": "2025",
+  "valueProp": "Manage ferry customers, reservations, payments, and occupancy in a fast terminal workflow backed by flat-file storage.",
+  "status": "School project",
+  "stack": ["C", "File I/O", "Data serialization", "CLI"],
+  "tags": ["C", "File I/O", "CLI", "School"],
+  "repoUrl": {
+    "label": "GitHub Repo",
+    "url": "https://github.com/zacharydagameiro/Ferry"
+  },
+  "demoUrl": null,
+  "featured": false,
+  "category": "school"
+}

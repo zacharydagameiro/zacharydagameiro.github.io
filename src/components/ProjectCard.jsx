@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { toProjectLink, getProjectLinkText } from '../utils/projectLinks'
 import { resolveAssetUrl } from '../utils/assetUrl'
 import { DEFAULT_GLOW_RGB, getImageGlowRgb } from '../utils/imageAccent'
+import ProjectLanguageBadges, { extractProjectLanguages } from './ProjectLanguageBadges.jsx'
 
 const CATEGORY_LABELS = {
   'ml-ai': 'ML / AI',
@@ -182,6 +183,7 @@ export default function ProjectCard({ project, listSearch = '' }) {
     if (demoLink) links.push({ link: demoLink, type: 'demo' })
     return links.filter(({ link }) => getProjectLinkText(link).length <= MAX_CARD_LINK_LABEL_LENGTH)
   }, [repoLink, demoLink])
+  const languageBadges = useMemo(() => extractProjectLanguages(project), [project])
 
   useEffect(() => {
     let isCanceled = false
@@ -248,7 +250,7 @@ export default function ProjectCard({ project, listSearch = '' }) {
       )}
 
       {hasCoverImage && (
-        <div className="project-card__media mb-3 overflow-hidden rounded-lg border bg-slate-100">
+        <div className="project-card__media relative mb-3 overflow-hidden rounded-lg border bg-slate-100">
           <img
             src={resolvedCoverImageUrl}
             alt={`${title} cover`}
@@ -256,6 +258,9 @@ export default function ProjectCard({ project, listSearch = '' }) {
             decoding="async"
             className="h-32 w-full object-cover transition duration-200 hover:scale-[1.02]"
           />
+          {languageBadges.length > 0 && (
+            <ProjectLanguageBadges className="absolute right-3 top-3 z-10 justify-end" languages={languageBadges} />
+          )}
         </div>
       )}
 

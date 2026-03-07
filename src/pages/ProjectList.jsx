@@ -6,11 +6,10 @@ import { PROJECTS_LAST_UPDATED } from '../data/siteMeta'
 
 const BASE_TABS = [
   { id: 'featured', label: 'Featured' },
+  { id: 'web', label: 'Mobile & Web' },
   { id: 'ml-ai', label: 'ML / AI' },
   { id: 'school', label: 'School' },
   { id: 'bio', label: 'Bio' },
-  { id: 'mini', label: 'Mini' },
-  { id: 'freelance', label: 'Freelance' },
   { id: 'all', label: 'All' },
 ]
 
@@ -20,17 +19,27 @@ const SORT_OPTIONS = [
   { id: 'alpha', label: 'A–Z' },
 ]
 
-const projectInCategory = (project, categoryId) =>
-  project.category === categoryId || (Array.isArray(project.categories) && project.categories.includes(categoryId))
+const projectInCategory = (project, categoryId) => {
+  if (categoryId === 'web') {
+    const tags = Array.isArray(project.tags) ? project.tags : []
+    return (
+      project.category === 'web' ||
+      (Array.isArray(project.categories) && project.categories.includes('web')) ||
+      tags.includes('Mobile') ||
+      tags.includes('React Native')
+    )
+  }
+
+  return project.category === categoryId || (Array.isArray(project.categories) && project.categories.includes(categoryId))
+}
 
 const TAB_ACTIVE_BG_CLASS = {
-  featured: 'bg-slate-900',
-  mini: 'bg-pink-600',
+  featured: 'bg-rose-600',
   'ml-ai': 'bg-violet-600',
   bio: 'bg-emerald-600',
   school: 'bg-amber-500',
-  freelance: 'bg-sky-600',
-  all: 'bg-slate-900',
+  web: 'bg-sky-600',
+  all: 'bg-cyan-700',
 }
 
 export default function ProjectList() {
@@ -62,12 +71,11 @@ export default function ProjectList() {
   const counts = useMemo(() => {
     const featured = projects.filter((p) => p.featured).length
     const all = projects.length
-    const mini = projects.filter((p) => projectInCategory(p, 'mini')).length
     const ml = projects.filter((p) => projectInCategory(p, 'ml-ai')).length
     const bio = projects.filter((p) => projectInCategory(p, 'bio')).length
     const school = projects.filter((p) => projectInCategory(p, 'school')).length
-    const freelance = projects.filter((p) => projectInCategory(p, 'freelance')).length
-    return { featured, all, mini, ml, bio, school, freelance }
+    const web = projects.filter((p) => projectInCategory(p, 'web')).length
+    return { featured, all, ml, bio, school, web }
   }, [projects])
 
   const tabs = useMemo(
@@ -75,11 +83,10 @@ export default function ProjectList() {
       BASE_TABS.map((tab) => {
         if (tab.id === 'featured') return { ...tab, label: `Featured (${counts.featured})` }
         if (tab.id === 'all') return { ...tab, label: `All (${counts.all})` }
-        if (tab.id === 'mini') return { ...tab, label: `Mini (${counts.mini})` }
         if (tab.id === 'ml-ai') return { ...tab, label: `ML / AI (${counts.ml})` }
         if (tab.id === 'bio') return { ...tab, label: `Bio (${counts.bio})` }
         if (tab.id === 'school') return { ...tab, label: `School (${counts.school})` }
-        if (tab.id === 'freelance') return { ...tab, label: `Freelance (${counts.freelance})` }
+        if (tab.id === 'web') return { ...tab, label: `Mobile & Web (${counts.web})` }
         return tab
       }),
     [counts]

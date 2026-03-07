@@ -1,0 +1,14 @@
+{
+  "title": "Auto Sales PDF Automator",
+  "caption": "Sherwood Park Toyota",
+  "shortDescription": "Automated dealership PDF paperwork from structured customer and vehicle data.",
+  "year": "2025",
+  "valueProp": "Generate clean dealership PDFs automatically from structured customer and vehicle data.",
+  "status": "Client project",
+  "stack": ["Python", "PDF form filling", "Automation"],
+  "tags": ["Python", "PDF", "Automation"],
+  "repoUrl": null,
+  "demoUrl": null,
+  "featured": false,
+  "category": "freelance"
+}

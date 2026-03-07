@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom'
 import projectsData from '../data/projects'
 import MarkdownContent from '../components/MarkdownContent.jsx'
 import ProjectCard, { ProjectIcon } from '../components/ProjectCard.jsx'
+import ProjectLanguageBadges, { extractProjectLanguages } from '../components/ProjectLanguageBadges.jsx'
 import SidebarCard from '../components/sidebar/SidebarCard'
 import SidebarLinkItem from '../components/sidebar/SidebarLinkItem'
 import SidebarSection from '../components/sidebar/SidebarSection'
@@ -387,6 +388,10 @@ export default function ProjectPage() {
     if (items.length <= 4) return items.join(', ')
     return `${items.slice(0, 4).join(', ')}, +${items.length - 4} more`
   }, [normalizedStackGroups])
+  const languageBadges = useMemo(
+    () => extractProjectLanguages({ stackGroups, stack, tags }),
+    [stackGroups, stack, tags]
+  )
   const relatedProjects = useMemo(() => {
     if (!project) return []
 
@@ -568,7 +573,7 @@ export default function ProjectPage() {
                 </div>
               </div>
 
-              {/* Row 2+ on mobile, row 2 on desktop: content + links */}
+              {/* Row 2+ on mobile, row 2 on desktop: content + right-side badges/links */}
               <div className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-4">
                 {/* Text block constrained to left “safe zone” */}
                 <div className="max-w-xl">
@@ -611,44 +616,49 @@ export default function ProjectPage() {
                   </div>
                 </div>
 
-                {(repoLink || demoLink || caseStudyLink) && (
-                  <div className="flex flex-wrap gap-2 sm:justify-end">
-                    {demoLink && (
-                      <a
-                        href={demoLink.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center rounded-full border border-white/20 bg-slate-950/45 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
-                        title={demoLink.url}
-                      >
-                        <span className="max-w-[14rem] truncate">{demoLinkLabel}</span>{' '}
-                        <span className="ml-1" aria-hidden>↗</span>
-                      </a>
+                {(languageBadges.length > 0 || repoLink || demoLink || caseStudyLink) && (
+                  <div className="flex flex-col items-start gap-3 sm:items-end">
+                    {languageBadges.length > 0 && (
+                      <ProjectLanguageBadges className="justify-end" languages={languageBadges} />
                     )}
-                    {caseStudyLink && (
-                      <a
-                        href={caseStudyLink.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center rounded-full border border-white/15 bg-slate-950/40 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
-                        title={caseStudyLink.url}
-                      >
-                        <span className="max-w-[14rem] truncate">{caseStudyLinkLabel}</span>{' '}
-                        <span className="ml-1" aria-hidden>↗</span>
-                      </a>
-                    )}
-                    {repoLink && (
-                      <a
-                        href={repoLink.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center rounded-full border border-white/15 bg-slate-950/40 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
-                        title={repoLink.url}
-                      >
-                        <span className="max-w-[14rem] truncate">{repoLinkLabel}</span>{' '}
-                        <span className="ml-1" aria-hidden>↗</span>
-                      </a>
-                    )}
+                    <div className="flex flex-wrap gap-2 sm:justify-end">
+                      {demoLink && (
+                        <a
+                          href={demoLink.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center rounded-full border border-white/20 bg-slate-950/45 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
+                          title={demoLink.url}
+                        >
+                          <span className="max-w-[14rem] truncate">{demoLinkLabel}</span>{' '}
+                          <span className="ml-1" aria-hidden>↗</span>
+                        </a>
+                      )}
+                      {caseStudyLink && (
+                        <a
+                          href={caseStudyLink.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center rounded-full border border-white/15 bg-slate-950/40 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
+                          title={caseStudyLink.url}
+                        >
+                          <span className="max-w-[14rem] truncate">{caseStudyLinkLabel}</span>{' '}
+                          <span className="ml-1" aria-hidden>↗</span>
+                        </a>
+                      )}
+                      {repoLink && (
+                        <a
+                          href={repoLink.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center rounded-full border border-white/15 bg-slate-950/40 px-3 py-1.5 text-xs font-medium text-slate-50 backdrop-blur hover:bg-slate-950/60"
+                          title={repoLink.url}
+                        >
+                          <span className="max-w-[14rem] truncate">{repoLinkLabel}</span>{' '}
+                          <span className="ml-1" aria-hidden>↗</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

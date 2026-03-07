@@ -1,0 +1,33 @@
+{
+  "title": "Receipt OCR",
+  "caption": "Structured Transactions",
+  "coverImageUrl": "/projects/receipt-ocr-transactions/cover.jpg",
+  "shortDescription": "Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.",
+  "year": "2025",
+  "valueProp": "Fast, low-cost receipt-to-JSON extraction: OCR on Cloud Run plus layout reconstruction enables small-LLM parsing without multimodal overhead.",
+  "status": "Prototype",
+  "stackGroups": [
+    { "label": "Backend", "items": ["Python"] },
+    { "label": "AI / Data", "items": ["PaddleOCR", "LLM"] },
+    { "label": "Infra", "items": ["Cloud Run", "Docker", "GCP"] }
+  ],
+  "screenshots": [
+    {
+      "src": "/projects/receipt-ocr-transactions/media/receipt-ocr-img1.jpg",
+      "type": "image",
+      "caption": "Receipt OCR pipeline output preview"
+    }
+  ],
+  "tags": ["Python", "OCR", "LLM", "GCP"],
+  "repoUrl": {
+    "label": "GitHub Repo",
+    "url": "https://github.com/zacharydagameiro/receipt-ocr"
+  },
+  "demoUrl": {
+    "label": "Preview (Google Cloud Run)",
+    "url": "https://receipt-ocr-demo-944565818393.us-central1.run.app/"
+  },
+  "featured": true,
+  "category": "ml-ai",
+  "categories": ["ml-ai", "web"]
+}
