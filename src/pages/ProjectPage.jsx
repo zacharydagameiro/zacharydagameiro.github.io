@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import projectsData from '../data/projects.json'
-import { ProjectIcon } from '../components/ProjectCard.jsx'
+import ProjectCard, { ProjectIcon } from '../components/ProjectCard.jsx'
 import SidebarCard from '../components/sidebar/SidebarCard'
 import SidebarLinkItem from '../components/sidebar/SidebarLinkItem'
 import SidebarSection from '../components/sidebar/SidebarSection'
@@ -84,11 +84,284 @@ const normalizeStackGroups = ({ stackGroups, stack, tags }) => {
   return []
 }
 
+const getProjectCategoryKeys = (project) => {
+  const values = []
+  if (Array.isArray(project?.categories)) values.push(...project.categories)
+  if (typeof project?.category === 'string') values.push(project.category)
+
+  return Array.from(
+    new Set(
+      values
+        .map((value) => (typeof value === 'string' ? value.trim() : ''))
+        .filter(Boolean)
+    )
+  )
+}
+
+const joinPathSegments = (...segments) =>
+  segments
+    .filter((segment) => typeof segment === 'string' && segment.trim().length > 0)
+    .map((segment, index) => {
+      const trimmed = segment.trim()
+      if (index === 0) return trimmed.replace(/\/+$/g, '')
+      return trimmed.replace(/^\/+|\/+$/g, '')
+    })
+    .join('/')
+
+const getProjectRootPath = (project) => {
+  const candidates = [project?.metadataUrl, project?.contentUrl, project?.coverImageUrl]
+
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string' || !candidate.includes('/projects/')) continue
+    const normalized = candidate.startsWith('/') ? candidate : `/${candidate}`
+    return normalized.replace(/\/[^/]+$/, '')
+  }
+
+  return ''
+}
+
+const toProjectMediaItem = (entry, projectRootPath, index) => {
+  const item = typeof entry === 'string' ? { name: entry } : entry
+  if (!item || typeof item !== 'object') return null
+
+  const name = typeof item.name === 'string' ? item.name.trim() : ''
+  if (!name || item.include === false || item.exclude === true || item.doNotInclude === true) return null
+
+  const basename = name.split('/').pop() || name
+  if (/^cover\./i.test(basename)) return null
+
+  const src = joinPathSegments(projectRootPath, 'media', name)
+  const poster =
+    typeof item.poster === 'string' && item.poster.trim().length > 0
+      ? item.poster.startsWith('/')
+        ? item.poster
+        : joinPathSegments(projectRootPath, 'media', item.poster)
+      : undefined
+
+  return {
+    src,
+    poster,
+    type: typeof item.type === 'string' && item.type.trim().length > 0 ? item.type.trim() : undefined,
+    caption: typeof item.caption === 'string' && item.caption.trim().length > 0 ? item.caption.trim() : undefined,
+    alt: typeof item.alt === 'string' && item.alt.trim().length > 0 ? item.alt.trim() : `${basename} preview`,
+    sortOrder: Number.isFinite(item.sortOrder) ? item.sortOrder : index
+  }
+}
+
+const normalizeProjectMediaItems = (entries, projectRootPath) => {
+  if (!projectRootPath || !Array.isArray(entries)) return []
+
+  return entries
+    .map((entry, index) => toProjectMediaItem(entry, projectRootPath, index))
+    .filter(Boolean)
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map(({ sortOrder, ...item }) => item)
+}
+
+const MARKDOWN_ENABLED_SLUGS = new Set(['haulr-concrete-fleet', 'receipt-ocr-transactions'])
+
+const renderInlineMarkdown = (text, keyPrefix) => {
+  if (typeof text !== 'string' || text.length === 0) return null
+
+  const tokens = []
+  const pattern = /\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)/g
+  let match = null
+  let lastIndex = 0
+  let tokenIndex = 0
+
+  while ((match = pattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push(
+        <span key={`${keyPrefix}-text-${tokenIndex}`}>{text.slice(lastIndex, match.index)}</span>
+      )
+      tokenIndex += 1
+    }
+
+    if (match[1]) {
+      tokens.push(<strong key={`${keyPrefix}-strong-${tokenIndex}`}>{match[1]}</strong>)
+    } else if (match[2]) {
+      tokens.push(
+        <code
+          key={`${keyPrefix}-code-${tokenIndex}`}
+          className="rounded bg-slate-100 px-1 py-0.5 text-[0.92em] text-slate-700"
+        >
+          {match[2]}
+        </code>
+      )
+    } else if (match[3] && match[4]) {
+      tokens.push(
+        <a
+          key={`${keyPrefix}-link-${tokenIndex}`}
+          href={match[4]}
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-slate-700 underline-offset-2 hover:text-slate-900 hover:underline"
+        >
+          {match[3]}
+        </a>
+      )
+    }
+
+    tokenIndex += 1
+    lastIndex = pattern.lastIndex
+  }
+
+  if (lastIndex < text.length) {
+    tokens.push(<span key={`${keyPrefix}-tail-${tokenIndex}`}>{text.slice(lastIndex)}</span>)
+  }
+
+  return tokens
+}
+
+const parseMarkdownBlocks = (markdown) => {
+  if (typeof markdown !== 'string' || markdown.trim().length === 0) return []
+
+  const blocks = []
+  const lines = markdown.split(/\r?\n/)
+  let index = 0
+
+  while (index < lines.length) {
+    const trimmed = lines[index].trim()
+    if (!trimmed) {
+      index += 1
+      continue
+    }
+
+    if (trimmed.startsWith('## ')) {
+      blocks.push({ type: 'h2', text: trimmed.slice(3).trim() })
+      index += 1
+      continue
+    }
+
+    if (trimmed.startsWith('### ')) {
+      blocks.push({ type: 'h3', text: trimmed.slice(4).trim() })
+      index += 1
+      continue
+    }
+
+    if (trimmed.startsWith('> ')) {
+      const quoteLines = []
+      while (index < lines.length && lines[index].trim().startsWith('> ')) {
+        quoteLines.push(lines[index].trim().slice(2).trim())
+        index += 1
+      }
+      blocks.push({ type: 'blockquote', text: quoteLines.join(' ') })
+      continue
+    }
+
+    if (trimmed.startsWith('- ')) {
+      const items = []
+      while (index < lines.length && lines[index].trim().startsWith('- ')) {
+        items.push(lines[index].trim().slice(2).trim())
+        index += 1
+      }
+      blocks.push({ type: 'ul', items })
+      continue
+    }
+
+    const paragraphLines = []
+    while (index < lines.length) {
+      const paragraphCandidate = lines[index].trim()
+      if (!paragraphCandidate) {
+        index += 1
+        break
+      }
+      if (
+        paragraphCandidate.startsWith('## ') ||
+        paragraphCandidate.startsWith('### ') ||
+        paragraphCandidate.startsWith('> ') ||
+        paragraphCandidate.startsWith('- ')
+      ) {
+        break
+      }
+      paragraphLines.push(paragraphCandidate)
+      index += 1
+    }
+
+    if (paragraphLines.length > 0) {
+      blocks.push({ type: 'p', text: paragraphLines.join(' ') })
+    }
+  }
+
+  return blocks
+}
+
+function MarkdownProjectBody({ markdown }) {
+  const blocks = useMemo(() => parseMarkdownBlocks(markdown), [markdown])
+
+  if (blocks.length === 0) return null
+
+  return (
+    <div className="space-y-4">
+      {blocks.map((block, blockIndex) => {
+        if (block.type === 'h2') {
+          return (
+            <h2 key={`block-${blockIndex}`} className="text-base font-semibold text-slate-900">
+              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
+            </h2>
+          )
+        }
+
+        if (block.type === 'h3') {
+          return (
+            <h3 key={`block-${blockIndex}`} className="text-sm font-semibold text-slate-900">
+              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
+            </h3>
+          )
+        }
+
+        if (block.type === 'ul') {
+          return (
+            <ul key={`block-${blockIndex}`} className="space-y-1.5 text-sm text-slate-600">
+              {block.items.map((item, itemIndex) => (
+                <li key={`block-${blockIndex}-item-${itemIndex}`} className="flex gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                  <span>{renderInlineMarkdown(item, `block-${blockIndex}-item-${itemIndex}`)}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        if (block.type === 'blockquote') {
+          return (
+            <blockquote
+              key={`block-${blockIndex}`}
+              className="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-sky-950 shadow-sm"
+            >
+              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
+            </blockquote>
+          )
+        }
+
+        return (
+          <p key={`block-${blockIndex}`} className="text-sm leading-relaxed text-slate-600">
+            {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function ProjectPage() {
   const { slug } = useParams()
   const location = useLocation()
   const backToProjectsUrl = location.search ? `/projects${location.search}` : '/projects'
-  const project = projectsData.find((p) => p.slug === slug)
+  const baseProject = projectsData.find((p) => p.slug === slug)
+  const isMarkdownProject = MARKDOWN_ENABLED_SLUGS.has(slug)
+  const [markdownProjectMeta, setMarkdownProjectMeta] = useState(null)
+  const [markdownBody, setMarkdownBody] = useState('')
+  const [isMarkdownLoading, setIsMarkdownLoading] = useState(false)
+  const [loadedMarkdownSlug, setLoadedMarkdownSlug] = useState('')
+  const hasLoadedMarkdownForCurrentSlug = loadedMarkdownSlug === slug
+  const project = useMemo(() => {
+    if (!baseProject) return null
+    if (!isMarkdownProject || !hasLoadedMarkdownForCurrentSlug || !markdownProjectMeta) return baseProject
+    return { ...baseProject, ...markdownProjectMeta, slug: baseProject.slug }
+  }, [baseProject, hasLoadedMarkdownForCurrentSlug, isMarkdownProject, markdownProjectMeta])
+  const useMarkdownContent = isMarkdownProject && hasLoadedMarkdownForCurrentSlug && markdownBody.trim().length > 0
+  const showStructuredSections = !isMarkdownProject || (!isMarkdownLoading && !useMarkdownContent)
   const metaDescription = project?.valueProp || project?.shortDescription || project?.longDescription || project?.description || SITE_DESCRIPTION
   const metaTitle = project ? `${project.title} | Zachary Gameiro` : DEFAULT_TITLE
   const pageUrl =
@@ -118,6 +391,9 @@ export default function ProjectPage() {
   const [showMediaCue, setShowMediaCue] = useState(false)
   const [heroGlowRgb, setHeroGlowRgb] = useState(null)
   const mediaSectionRef = useRef(null)
+  const relatedProjectsRef = useRef(null)
+  const [canScrollRelatedPrev, setCanScrollRelatedPrev] = useState(false)
+  const [canScrollRelatedNext, setCanScrollRelatedNext] = useState(false)
   const isLightboxOpen = lightboxIndex !== null && screenshotsList.length > 0
   const activeScreenshot = isLightboxOpen ? screenshotsList[lightboxIndex] : null
   const isVideoMedia = (item) => {
@@ -130,6 +406,94 @@ export default function ProjectPage() {
   useEffect(() => {
     document.title = project ? `${project.title} | Zachary Gameiro` : DEFAULT_TITLE
   }, [project])
+
+  useEffect(() => {
+    let isCanceled = false
+
+    if (!baseProject || !isMarkdownProject) {
+      setMarkdownProjectMeta(null)
+      setMarkdownBody('')
+      setIsMarkdownLoading(false)
+      setLoadedMarkdownSlug('')
+      return () => {
+        isCanceled = true
+      }
+    }
+
+    const metadataUrl = baseProject.metadataUrl
+    const contentUrl = baseProject.contentUrl
+    const projectRootPath = getProjectRootPath(baseProject)
+    const mediaMetadataUrl = projectRootPath ? joinPathSegments(projectRootPath, 'media', 'metadata.json') : ''
+
+    if (!metadataUrl && !contentUrl) {
+      setMarkdownProjectMeta(null)
+      setMarkdownBody('')
+      setIsMarkdownLoading(false)
+      setLoadedMarkdownSlug('')
+      return () => {
+        isCanceled = true
+      }
+    }
+
+    const loadMarkdownProject = async () => {
+      setIsMarkdownLoading(true)
+
+      let loadedMetadata = null
+      let loadedBody = ''
+
+      if (metadataUrl) {
+        try {
+          const response = await fetch(metadataUrl)
+          if (response.ok) {
+            loadedMetadata = await response.json()
+          }
+        } catch (error) {
+          loadedMetadata = null
+        }
+      }
+
+      let mediaMetadata = []
+      if (mediaMetadataUrl) {
+        try {
+          const response = await fetch(mediaMetadataUrl)
+          if (response.ok) {
+            const mediaEntries = await response.json()
+            mediaMetadata = normalizeProjectMediaItems(mediaEntries, projectRootPath)
+          }
+        } catch (error) {
+          mediaMetadata = []
+        }
+      }
+
+      if (contentUrl) {
+        try {
+          const response = await fetch(contentUrl)
+          if (response.ok) {
+            loadedBody = await response.text()
+          }
+        } catch (error) {
+          loadedBody = ''
+        }
+      }
+
+      if (!isCanceled) {
+        const mergedMetadata = loadedMetadata && typeof loadedMetadata === 'object' ? { ...loadedMetadata } : {}
+        if (mediaMetadata.length > 0) {
+          mergedMetadata.screenshots = mediaMetadata
+        }
+        setMarkdownProjectMeta(mergedMetadata)
+        setMarkdownBody(loadedBody)
+        setLoadedMarkdownSlug(baseProject.slug)
+        setIsMarkdownLoading(false)
+      }
+    }
+
+    loadMarkdownProject()
+
+    return () => {
+      isCanceled = true
+    }
+  }, [baseProject, isMarkdownProject])
 
   useEffect(() => {
     const metaUpdates = [
@@ -366,6 +730,60 @@ export default function ProjectPage() {
     if (items.length <= 4) return items.join(', ')
     return `${items.slice(0, 4).join(', ')}, +${items.length - 4} more`
   }, [normalizedStackGroups])
+  const relatedProjects = useMemo(() => {
+    if (!project) return []
+
+    const currentCategoryKeys = getProjectCategoryKeys(project)
+    const currentCategorySet = new Set(currentCategoryKeys)
+
+    return projectsData
+      .filter((candidate) => candidate.slug !== project.slug)
+      .map((candidate) => {
+        const candidateCategoryKeys = getProjectCategoryKeys(candidate)
+        const sharedCategoryCount = candidateCategoryKeys.filter((key) => currentCategorySet.has(key)).length
+        const score =
+          sharedCategoryCount * 100 +
+          (candidate.featured ? 10 : 0) +
+          (candidate.year === project.year ? 1 : 0)
+
+        return { candidate, score, sharedCategoryCount }
+      })
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score
+        return String(b.candidate.year || '').localeCompare(String(a.candidate.year || ''))
+      })
+      .slice(0, 3)
+  }, [project])
+  const hasSimilarProjects = relatedProjects.some((item) => item.sharedCategoryCount > 0)
+  const relatedProjectsTitle = hasSimilarProjects ? 'Similar projects' : 'Featured projects'
+  const relatedProjectsDescription = hasSimilarProjects
+    ? 'A few other projects in a similar lane.'
+    : 'A few other featured projects worth a look.'
+
+  useEffect(() => {
+    const track = relatedProjectsRef.current
+
+    if (!track || relatedProjects.length === 0) {
+      setCanScrollRelatedPrev(false)
+      setCanScrollRelatedNext(false)
+      return
+    }
+
+    const updateScrollState = () => {
+      const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth)
+      setCanScrollRelatedPrev(track.scrollLeft > 8)
+      setCanScrollRelatedNext(track.scrollLeft < maxScrollLeft - 8)
+    }
+
+    updateScrollState()
+    track.addEventListener('scroll', updateScrollState, { passive: true })
+    window.addEventListener('resize', updateScrollState)
+
+    return () => {
+      track.removeEventListener('scroll', updateScrollState)
+      window.removeEventListener('resize', updateScrollState)
+    }
+  }, [relatedProjects])
 
   const quickFacts = []
   if (primaryStack) quickFacts.push({ label: 'Stack', value: primaryStack })
@@ -416,6 +834,17 @@ export default function ProjectPage() {
     const section = mediaSectionRef.current
     if (!section) return
     section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const handleScrollRelatedProjects = (direction) => {
+    const track = relatedProjectsRef.current
+    if (!track) return
+
+    const scrollAmount = Math.max(track.clientWidth * 0.82, 280)
+    track.scrollBy({
+      left: direction === 'next' ? scrollAmount : -scrollAmount,
+      behavior: 'smooth'
+    })
   }
 
   return (
@@ -577,7 +1006,7 @@ export default function ProjectPage() {
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_288px]">
               <div className="space-y-6">
                 <div className="space-y-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                  {sectionNavItems.length > 0 && (
+                  {showStructuredSections && sectionNavItems.length > 0 && (
                     <nav
                       aria-label="Project sections"
                       className="-mt-1 flex flex-wrap gap-2 border-b border-slate-100 pb-4"
@@ -595,7 +1024,21 @@ export default function ProjectPage() {
                     </nav>
                   )}
 
-                  <section id="overview" className="scroll-mt-28">
+                  {isMarkdownProject && isMarkdownLoading && (
+                    <section id="overview" className="scroll-mt-28">
+                      <h2 className="text-base font-semibold text-slate-900">Loading content</h2>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">Loading markdown project content…</p>
+                    </section>
+                  )}
+
+                  {useMarkdownContent && (
+                    <section id="overview" className="scroll-mt-28">
+                      <MarkdownProjectBody markdown={markdownBody} />
+                    </section>
+                  )}
+
+                  {showStructuredSections && (
+                    <section id="overview" className="scroll-mt-28">
                     <h2 className="text-base font-semibold text-slate-900">At a glance</h2>
                     <div className="mt-3 grid gap-6 md:grid-cols-2">
                       <div>
@@ -617,15 +1060,16 @@ export default function ProjectPage() {
                       )}
                     </div>
                   </section>
+                  )}
 
-                  {hasMotivation && (
+                  {showStructuredSections && hasMotivation && (
                     <section id="motivation" className="scroll-mt-28">
                       <h2 className="text-base font-semibold text-slate-900">Motivation</h2>
                       <p className="mt-2 text-sm leading-relaxed text-slate-600">{motivation}</p>
                     </section>
                   )}
 
-                  {hasArchitecture && (
+                  {showStructuredSections && hasArchitecture && (
                     <section id="architecture" className="scroll-mt-28">
                       <h2 className="text-base font-semibold text-slate-900">Architecture</h2>
                       {Array.isArray(architectureSteps) && architectureSteps.length > 0 && (
@@ -653,7 +1097,7 @@ export default function ProjectPage() {
                     </section>
                   )}
 
-                  {Array.isArray(challenges) && challenges.length > 0 && (
+                  {showStructuredSections && Array.isArray(challenges) && challenges.length > 0 && (
                     <section>
                       <h2 className="text-base font-semibold text-slate-900">Challenges &amp; tradeoffs</h2>
                       <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
@@ -667,7 +1111,7 @@ export default function ProjectPage() {
                     </section>
                   )}
 
-                  {hasResults && (
+                  {showStructuredSections && hasResults && (
                     <section id="results" className="scroll-mt-28">
                       <h2 className="text-base font-semibold text-slate-900">Results</h2>
                       <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -695,7 +1139,7 @@ export default function ProjectPage() {
                     </section>
                   )}
 
-                  {hasReferences && (
+                  {showStructuredSections && hasReferences && (
                     <section id="references" className="scroll-mt-28">
                       <h2 className="text-base font-semibold text-slate-900">References &amp; credits</h2>
                       <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
@@ -719,7 +1163,8 @@ export default function ProjectPage() {
                     </section>
                   )}
 
-                  <section id="next" className="scroll-mt-28">
+                  {showStructuredSections && (
+                    <section id="next" className="scroll-mt-28">
                     <h2 className="text-base font-semibold text-slate-900">What I’d do next</h2>
                     {Array.isArray(nextSteps) && nextSteps.length > 0 ? (
                       <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
@@ -737,6 +1182,7 @@ export default function ProjectPage() {
                       </p>
                     )}
                   </section>
+                  )}
                 </div>
 
                 {(hasScreenshots || (Array.isArray(artifacts) && artifacts.length > 0)) ? (
@@ -869,6 +1315,51 @@ export default function ProjectPage() {
                 )}
               </aside>
             </div>
+
+            {relatedProjects.length > 0 && (
+              <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 shadow-sm sm:p-6">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-900">{relatedProjectsTitle}</h2>
+                    <p className="mt-1 text-sm text-slate-600">{relatedProjectsDescription}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleScrollRelatedProjects('prev')}
+                      disabled={!canScrollRelatedPrev}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                      aria-label="Scroll to previous related projects"
+                    >
+                      <span aria-hidden>←</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleScrollRelatedProjects('next')}
+                      disabled={!canScrollRelatedNext}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                      aria-label="Scroll to next related projects"
+                    >
+                      <span aria-hidden>→</span>
+                    </button>
+                    <Link to={backToProjectsUrl} className="ml-1 text-sm font-medium text-slate-700 underline-offset-2 hover:text-slate-900 hover:underline">
+                      View all projects
+                    </Link>
+                  </div>
+                </div>
+
+                <ul
+                  ref={relatedProjectsRef}
+                  className="mt-5 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                  {relatedProjects.map(({ candidate }) => (
+                    <li key={candidate.slug} className="min-w-0 shrink-0 snap-start basis-[88%] sm:basis-[48%] lg:basis-[31.5%]">
+                      <ProjectCard project={candidate} listSearch={location.search} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {(previousProject || nextProject) && (
               <nav className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between" aria-label="Project navigation">

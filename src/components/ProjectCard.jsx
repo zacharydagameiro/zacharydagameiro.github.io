@@ -70,6 +70,8 @@ const getProjectLinkType = (link, fallbackType) => {
   return fallbackType
 }
 
+const MAX_CARD_LINK_LABEL_LENGTH = 22
+
 export function ProjectIcon({ category, className = 'h-4 w-4' }) {
   // Default: folder (general project)
   if (!category) {
@@ -174,6 +176,12 @@ export default function ProjectCard({ project, listSearch = '' }) {
   const [imageGlowRgb, setImageGlowRgb] = useState(null)
   const demoLink = toProjectLink(demoUrl)
   const repoLink = toProjectLink(repoUrl)
+  const cardLinks = useMemo(() => {
+    const links = []
+    if (repoLink) links.push({ link: repoLink, type: 'repo' })
+    if (demoLink) links.push({ link: demoLink, type: 'demo' })
+    return links.filter(({ link }) => getProjectLinkText(link).length <= MAX_CARD_LINK_LABEL_LENGTH)
+  }, [repoLink, demoLink])
 
   useEffect(() => {
     let isCanceled = false
@@ -284,44 +292,27 @@ export default function ProjectCard({ project, listSearch = '' }) {
           ))}
           <span className="text-[11px] text-slate-400">{year}</span>
         </div>
-        {(demoLink || repoLink) && (
-          <div className="flex min-w-0 flex-wrap items-center gap-2 sm:flex-nowrap">
-            {repoLink && (
+        {cardLinks.length > 0 && (
+          <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+            {cardLinks.map(({ link, type }) => (
               <button
+                key={`${type}-${link.url}`}
                 type="button"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  window.open(repoLink.url, '_blank', 'noopener,noreferrer')
+                  window.open(link.url, '_blank', 'noopener,noreferrer')
                 }}
-                className="inline-flex min-w-0 max-w-full flex-1 items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                title={getProjectLinkText(repoLink)}
+                className="inline-flex shrink-0 items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                title={getProjectLinkText(link)}
               >
-                <ProjectLinkIcon type={getProjectLinkType(repoLink, 'repo')} className="mr-1.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
-                <span className="min-w-0 truncate">{getProjectLinkText(repoLink)}</span>
+                <ProjectLinkIcon type={getProjectLinkType(link, type)} className="mr-1.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
+                <span>{getProjectLinkText(link)}</span>
                 <span className="ml-1" aria-hidden>
                   ↗
                 </span>
               </button>
-            )}
-            {demoLink && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  window.open(demoLink.url, '_blank', 'noopener,noreferrer')
-                }}
-                className="inline-flex min-w-0 max-w-full flex-1 items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                title={getProjectLinkText(demoLink)}
-              >
-                <ProjectLinkIcon type={getProjectLinkType(demoLink, 'demo')} className="mr-1.5 h-3.5 w-3.5 shrink-0 text-slate-500" />
-                <span className="min-w-0 truncate">{getProjectLinkText(demoLink)}</span>
-                <span className="ml-1" aria-hidden>
-                  ↗
-                </span>
-              </button>
-            )}
+            ))}
           </div>
         )}
       </div>

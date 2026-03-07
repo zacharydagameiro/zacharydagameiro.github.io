@@ -13,9 +13,9 @@ export default function HomeSidebar({ about }) {
         contact: true,
         links: true,
         location: true,
-        languages: true,
+        languages: false,
         resumes: true,
-        skills: true,
+        skills: false,
       }}
     />
   )

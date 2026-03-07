@@ -1,14 +1,38 @@
 [
   {
-    "name": "general",
-    "title": "General Software Resume",
-    "label": "General",
-    "uri": "/resumes/resume.pdf"
+    "name": "ai-ml-2026",
+    "title": "AI / ML Resume",
+    "label": "AI / ML",
+    "uri": "/resumes/AI-ML Resume.pdf"
   },
   {
-    "name": "ml-ai",
-    "title": "ML / AI Resume",
-    "label": "ML / AI",
-    "uri": "/resumes/resume-ml-ai.pdf"
+    "name": "backend-2026",
+    "title": "Backend Resume",
+    "label": "Backend",
+    "uri": "/resumes/Backend Resume.pdf"
+  },
+  {
+    "name": "biotech-2026",
+    "title": "BioTech Resume",
+    "label": "BioTech",
+    "uri": "/resumes/BioTech Resume.pdf"
+  },
+  {
+    "name": "full-stack-2026",
+    "title": "Full Stack Resume",
+    "label": "Full Stack",
+    "uri": "/resumes/Full Stack Resume.pdf"
+  },
+  {
+    "name": "tester-2026",
+    "title": "Tester Resume",
+    "label": "Tester",
+    "uri": "/resumes/Tester Resume.pdf"
+  },
+  {
+    "name": "web-dev-2026",
+    "title": "Web Dev Resume",
+    "label": "Web Dev",
+    "uri": "/resumes/Web Dev Resume.pdf"
   }
 ]

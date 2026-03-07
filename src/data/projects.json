@@ -3,93 +3,11 @@
     "slug": "receipt-ocr-transactions",
     "title": "Receipt OCR",
     "caption": "Structured Transactions",
-    "coverImageUrl": "/covers/receipt-ocr.jpg",
+    "coverImageUrl": "/projects/receipt-ocr-transactions/cover.jpg",
+    "metadataUrl": "/projects/receipt-ocr-transactions/metadata.json",
+    "contentUrl": "/projects/receipt-ocr-transactions/content.md",
     "shortDescription": "Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.",
-    "description": "Built a receipt OCR pipeline where images are sent to a CPU PaddleOCR service running in Docker on Google Cloud Run. PaddleOCR returns text with bounding boxes/positions, then a reconstruction function rebuilds a receipt-shaped text string that preserves layout cues. That reconstructed text lets a lightweight text-only LLM extract structured JSON quickly, without needing a slower multimodal model for OCR. Result: roughly a 200% OCR speed increase versus the earlier prototype path.",
-    "longDescription": "Designed a two-stage receipt extraction pipeline optimized for speed and cost. Stage 1 runs PaddleOCR (CPU, Docker, Cloud Run) to convert receipt images into text plus bounding box coordinates. Stage 2 uses those coordinates to reconstruct a receipt-like text block so line order and visual grouping are preserved well enough for parsing. Feeding this reconstructed text to a small text-only LLM makes JSON extraction fast and reliable, so multimodal LLM OCR is optional instead of required. Compared to the initial approach, OCR throughput improved by about 200%.",
     "year": "2025",
-    "stack": [
-      "Python",
-      "PaddleOCR",
-      "Cloud Run",
-      "Docker",
-      "GCP",
-      "LLM"
-    ],
-    "stackGroups": [
-      {
-        "label": "Backend",
-        "items": ["Python"]
-      },
-      {
-        "label": "AI / Data",
-        "items": ["PaddleOCR", "LLM"]
-      },
-      {
-        "label": "Infra",
-        "items": ["Cloud Run", "Docker", "GCP"]
-      }
-    ],
-    "valueProp": "Fast, low-cost receipt-to-JSON extraction: OCR on Cloud Run plus layout reconstruction enables small-LLM parsing without multimodal overhead.",
-    "status": "Prototype",
-    "highlights": [
-      "~200% OCR speed improvement over the earlier prototype approach",
-      "PaddleOCR runs on CPU in a Docker container hosted on Cloud Run",
-      "OCR output includes text plus bounding boxes/positions for each token",
-      "Reconstruction step rebuilds receipt-shaped text from OCR coordinates",
-      "Layout-preserving text enables fast JSON extraction with a small text LLM"
-    ],
-    "architectureSteps": [
-      "Upload Image",
-      "PaddleOCR (Cloud Run)",
-      "Get Text + Boxes",
-      "Reconstruct Receipt Text",
-      "LLM JSON Extraction (Optional)",
-      "Return JSON"
-    ],
-    "architectureNotes": [
-      "Cloud Run hosts PaddleOCR in a CPU Docker container for fast image-to-text conversion",
-      "Bounding boxes are used to rebuild a receipt-like string that preserves rough visual layout",
-      "Because the LLM receives structured text instead of raw images, a small non-multimodal model can extract JSON quickly",
-      "Future production scale: run on an always-on VM (no cold starts) with GPU-backed local LLM serving for security, lower latency, and control"
-    ],
-    "challenges": [
-      "Noisy, skewed, and low-light receipt images",
-      "Parsing line items across different merchant layouts",
-      "Cold starts on Cloud Run due to model load time",
-      "Balancing latency, accuracy, and Cloud Run cost"
-    ],
-    "results": [
-      {
-        "label": "OCR speed",
-        "value": "~200% faster vs earlier prototype path"
-      },
-      {
-        "label": "Pipeline design",
-        "value": "OCR with spatial reconstruction before LLM parsing"
-      },
-      {
-        "label": "Model strategy",
-        "value": "Avoids multimodal LLM OCR on the hot path"
-      },
-      {
-        "label": "Latency profile",
-        "value": "Optimized for low-latency receipt-to-JSON extraction"
-      }
-    ],
-    "nextSteps": [
-      "Move OCR service to an always-on VM at higher traffic to eliminate cold starts",
-      "Use a GPU machine to accelerate OCR/serving and reduce end-to-end latency",
-      "Self-host a lightweight local LLM (for example, Ollama) instead of external API calls for better security and customization",
-      "Adopt GPU/self-hosted serving when traffic justifies infrastructure cost"
-    ],
-    "screenshots": [
-      {
-        "src": "/media/receipt-ocr-img1.jpg",
-        "type": "image",
-        "caption": "Receipt OCR pipeline output preview"
-      }
-    ],
     "tags": [
       "Python",
       "OCR",
@@ -112,7 +30,7 @@
     "title": "TI-84 Wireless Messaging",
     "caption": "Embedded calculator messaging system",
     "coverImageUrl": "/covers/ti84-wireless-messaging.jpg",
-    "shortDescription": "Developed an end-to-end embedded Arduino + TI-BASIC stack for wireless messaging between TI-84 calculators.",
+    "shortDescription": "Built wireless messaging between TI-84 calculators using embedded Arduino + RF hardware.",
     "description": "Built a hardware-software messaging system by embedding an Arduino Nano and nRF24L01 RF transceiver inside TI-84 calculators. Reverse-engineered the TI-84 TRS link behavior and implemented a bridge between TI-BASIC UI flows and Arduino firmware packet handling for real-time wireless chat.",
     "longDescription": "Designed and built an end-to-end wireless messaging stack for TI-84 calculators. Hardware integration included Arduino Nano, nRF24L01 transceiver, wiring, capacitors for power stability, a mini I/O switch, and internal assembly/soldering inside the calculator shell. Software work included TI-BASIC client UX plus Arduino C/C++ firmware for framing, retries, and message delivery across multiple devices. The system achieved stable real-world messaging while operating under strict power, space, and timing constraints.",
     "motivation": "I noticed TI-84 calculators have TRS link ports and started digging into what they could do. After learning they are mainly used to share charts/data, I found a driver online that let TI-BASIC read from and write to the TRS cable directly. That inspired me to build a minimal chat interface and message protocol. The key idea was simple: if I can transmit messages over a wire, I can replace the wire with RF and make calculator-to-calculator wireless messaging.",
@@ -166,8 +84,12 @@
       "TI-BASIC",
       "Embedded"
     ],
-    "repoUrl": null,
+    "repoUrl": {
+      "label": "GitHub Repo",
+      "url": "https://github.com/zacharydagameiro/haulr"
+    },
     "demoUrl": {
+      "label": "Reddit Demo",
       "url": "https://www.reddit.com/r/ti84hacks/comments/f5k8x1/wireless_communication/"
     },
     "featured": true,
@@ -223,7 +145,7 @@
     "title": "SMLM Clustering with Graph Embeddings",
     "caption": "SFU / MIRO-based pipeline",
     "coverImageUrl": "/covers/smlm-clustering.jpg",
-    "shortDescription": "Worked on a team to build an SMLM clustering pipeline using MIRO graph embeddings and density-based clustering.",
+    "shortDescription": "Built and trained an SMLM clustering pipeline using MIRO graph embeddings with DBSCAN/HDBSCAN.",
     "description": "Built a single-molecule localization microscopy (SMLM) clustering pipeline using MIRO graph embeddings and DBSCAN/HDBSCAN. Reproduced and trained MIRO on custom SMLM localization data and evaluated how embedding choices affect recovered molecular structures.",
     "longDescription": "Built an SMLM (single-molecule localization microscopy) clustering pipeline using MIRO-based graph embeddings and density-based clustering at SFU. Reproduced and trained MIRO on custom SMLM localization data using mutual k-NN graphs. Identified molecular structures via DBSCAN/HDBSCAN and reconstruction outputs.",
     "year": "2025",
@@ -252,6 +174,7 @@
       "HDBSCAN"
     ],
     "repoUrl": {
+      "label": "GitHub Repo",
       "url": "https://github.com/sfu-cmpt340/2025_3_project_14"
     },
     "demoUrl": null,
@@ -378,11 +301,12 @@
     "slug": "haulr-concrete-fleet",
     "title": "Haulr",
     "caption": "Concrete Operations Platform",
-    "coverImageUrl": "/covers/haulr.jpg",
-    "shortDescription": "Built a multi-app concrete ordering and delivery platform with customer quoting, operations workflows, and real-time cost tracking.",
+    "coverImageUrl": "/projects/haulr-concrete-fleet/cover.jpg",
+    "metadataUrl": "/projects/haulr-concrete-fleet/metadata.json",
+    "contentUrl": "/projects/haulr-concrete-fleet/content.md",
+    "shortDescription": "Built a concrete ops platform for lead intake, quoting, scheduling, and job cost tracking.",
     "description": "Haulr is a concrete operations platform spanning lead capture, quoting, job execution, and cost visibility. I built the product as a multi-app system (site, dashboard, admin) with a role-aware company model and production-ready workflow components for teams handling real deliveries.",
     "longDescription": "Designed and built Haulr as a full-stack concrete logistics product with three app surfaces: customer site, operations dashboard, and admin tools. The dashboard supports company onboarding, lead intake, claim/archive workflows, job creation, materials/labour/expense tracking, scheduling, and client management. The backend uses callable function workflows, geocoding, and billing integrations, with a current backend modernization path underway to harden schema/migrations and improve long-term reliability.",
-    "demoNote": "Demo account resets every 24 hours. Email: demo@haulrbc.com | Password: 124haurMe. Feel free to explore and create users; please avoid major changes.",
     "year": "2026",
     "stack": [
       "React",
@@ -462,13 +386,6 @@
       "Firebase",
       "Operations",
       "SaaS"
-    ],
-    "screenshots": [
-      {
-        "src": "/media/haulr-img1.jpg",
-        "type": "image",
-        "caption": "Haulr dashboard UI preview"
-      }
     ],
     "repoUrl": null,
     "demoUrl": {
