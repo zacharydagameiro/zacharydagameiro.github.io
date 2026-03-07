@@ -4,7 +4,7 @@
   "coverImageUrl": "/projects/haulr-concrete-fleet/cover.jpg",
   "shortDescription": "Built a construction ops platform for lead intake, quoting, scheduling, and job cost tracking.",
   "year": "2026",
-  "valueProp": "Purpose-built construction operations software: move from request to scheduled work with shared visibility across sales, ops, and field teams.",
+  "description": "Built a construction operations platform for lead intake, quoting, scheduling, job tracking, and role-based coordination across sales, operations, and field teams.",
   "status": "Active rebuild",
   "stackGroups": [
     { "label": "Frontend", "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui"] },

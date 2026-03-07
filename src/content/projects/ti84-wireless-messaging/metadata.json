@@ -5,7 +5,7 @@
   "shortDescription": "Built a wireless messaging system for TI-84 calculators.",
   "motivation": "I noticed TI-84 calculators have TRS link ports and started digging into what they could do. After learning they are mainly used to share charts/data, I found a driver online that let TI-BASIC read from and write to the TRS cable directly. That inspired me to build a minimal chat interface and message protocol. The key idea was simple: if I can transmit messages over a wire, I can replace the wire with RF and make calculator-to-calculator wireless messaging.",
   "year": "2020",
-  "valueProp": "Turn stock TI-84 calculators into portable wireless chat devices with custom embedded hardware and firmware.",
+  "description": "Turned stock TI-84 calculators into wireless chat devices by combining TI-BASIC, embedded Arduino hardware, and RF communication inside the calculators.",
   "status": "Prototype",
   "stackGroups": [
     { "label": "Software", "items": ["TI-BASIC", "Arduino C/C++"] },

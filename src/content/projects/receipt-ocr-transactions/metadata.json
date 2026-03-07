@@ -4,7 +4,7 @@
   "coverImageUrl": "/projects/receipt-ocr-transactions/cover.jpg",
   "shortDescription": "Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.",
   "year": "2025",
-  "valueProp": "Fast, low-cost receipt-to-JSON extraction: OCR on Cloud Run plus layout reconstruction enables small-LLM parsing without multimodal overhead.",
+  "description": "Built a receipt OCR pipeline that runs on Cloud Run, reconstructs layout from extracted text, and outputs structured transaction JSON without relying on multimodal OCR APIs.",
   "status": "Prototype",
   "stackGroups": [
     { "label": "Backend", "items": ["Python"] },

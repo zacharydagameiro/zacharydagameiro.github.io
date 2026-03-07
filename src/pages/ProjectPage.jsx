@@ -108,7 +108,7 @@ export default function ProjectPage() {
   const projectContent = typeof project?.content === 'string' ? project.content : ''
   const useMarkdownContent = projectContent.trim().length > 0
   const showStructuredSections = !useMarkdownContent
-  const metaDescription = project?.valueProp || project?.shortDescription || project?.longDescription || project?.description || SITE_DESCRIPTION
+  const metaDescription = project?.description || project?.shortDescription || project?.longDescription || SITE_DESCRIPTION
   const metaTitle = project ? `${project.title} | Zachary Gameiro` : DEFAULT_TITLE
   const pageUrl =
     typeof window !== 'undefined'
@@ -376,7 +376,7 @@ export default function ProjectPage() {
   const repoLinkLabel = getProjectLinkLabel(repoLink, 'repo')
   const caseStudyLinkLabel = getProjectLinkLabel(caseStudyLink, 'case-study')
   const problemText = longDescription || description || shortDescription
-  const heroValueProp = valueProp || shortDescription
+  const heroValueProp = description || shortDescription
   const normalizedStackGroups = useMemo(
     () => normalizeStackGroups({ stackGroups, stack, tags }),
     [stackGroups, stack, tags]

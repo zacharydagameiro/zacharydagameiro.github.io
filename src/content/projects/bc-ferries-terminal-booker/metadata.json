@@ -4,7 +4,7 @@
   "coverImageUrl": "/projects/bc-ferries-terminal-booker/cover.jpg",
   "shortDescription": "Built a C-based terminal reservation system with file storage, payments, and occupancy checks.",
   "year": "2025",
-  "valueProp": "Manage ferry customers, reservations, payments, and occupancy in a fast terminal workflow backed by flat-file storage.",
+  "description": "Built a C-based ferry terminal reservation system with flat-file storage for customers, bookings, payments, edits, and occupancy checks in a CLI workflow.",
   "status": "School project",
   "stack": ["C", "File I/O", "Data serialization", "CLI"],
   "tags": ["C", "File I/O", "CLI", "School"],

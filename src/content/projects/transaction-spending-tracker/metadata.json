@@ -3,6 +3,7 @@
   "caption": "Personal Finance Tracker",
   "coverImageUrl": "/projects/transaction-spending-tracker/cover.jpg",
   "shortDescription": "Built a React Native finance app with Supabase to ingest transactions and track spending.",
+  "description": "Built a React Native personal finance app with Supabase to ingest transactions, track spending, and organize financial activity in one mobile experience.",
   "year": "2025",
   "tags": ["React", "JavaScript", "Finance", "Data"],
   "repoUrl": null,

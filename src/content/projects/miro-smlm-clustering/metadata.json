@@ -4,7 +4,7 @@
   "coverImageUrl": "/projects/miro-smlm-clustering/cover.jpg",
   "shortDescription": "Built and trained an SMLM clustering pipeline with MIRO graph embeddings.",
   "year": "2025",
-  "valueProp": "Cluster single-molecule localization microscopy data using MIRO graph embeddings and density-based clustering.",
+  "description": "Built and trained an SMLM clustering pipeline using MIRO graph embeddings and density-based clustering to group single-molecule localization microscopy data.",
   "status": "Research project",
   "stack": ["Python", "PyTorch", "MIRO", "DBSCAN", "HDBSCAN"],
   "tags": ["Python", "PyTorch", "ML", "HDBSCAN"],

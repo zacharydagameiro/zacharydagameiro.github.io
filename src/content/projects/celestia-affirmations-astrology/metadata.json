@@ -3,6 +3,7 @@
   "caption": "Astrology + Daily Affirmations App",
   "coverImageUrl": "/projects/celestia-affirmations-astrology/cover.jpg",
   "shortDescription": "Built a mobile app combining daily affirmations with personalized astrology content.",
+  "description": "Built a React Native mobile app that combines daily affirmations with personalized astrology content in a polished consumer-style experience.",
   "year": "2025",
   "tags": ["React Native", "Mobile", "UI/UX", "Product"],
   "repoUrl": null,
