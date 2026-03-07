@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
-import projectsData from '../data/projects.json'
+import projectsData from '../data/projects'
+import MarkdownContent from '../components/MarkdownContent.jsx'
 import ProjectCard, { ProjectIcon } from '../components/ProjectCard.jsx'
 import SidebarCard from '../components/sidebar/SidebarCard'
 import SidebarLinkItem from '../components/sidebar/SidebarLinkItem'
 import SidebarSection from '../components/sidebar/SidebarSection'
 import { SectionIcon } from '../components/sidebar/SidebarIcons'
 import { SITE_DESCRIPTION } from '../data/siteMeta'
-import { toProjectLink, getProjectLinkText } from '../utils/projectLinks'
+import { toProjectLink } from '../utils/projectLinks'
 import { resolveAssetUrl } from '../utils/assetUrl'
 import { DEFAULT_GLOW_RGB, getImageGlowRgb } from '../utils/imageAccent'
 
@@ -98,268 +99,14 @@ const getProjectCategoryKeys = (project) => {
   )
 }
 
-const joinPathSegments = (...segments) =>
-  segments
-    .filter((segment) => typeof segment === 'string' && segment.trim().length > 0)
-    .map((segment, index) => {
-      const trimmed = segment.trim()
-      if (index === 0) return trimmed.replace(/\/+$/g, '')
-      return trimmed.replace(/^\/+|\/+$/g, '')
-    })
-    .join('/')
-
-const getProjectRootPath = (project) => {
-  const candidates = [project?.metadataUrl, project?.contentUrl, project?.coverImageUrl]
-
-  for (const candidate of candidates) {
-    if (typeof candidate !== 'string' || !candidate.includes('/projects/')) continue
-    const normalized = candidate.startsWith('/') ? candidate : `/${candidate}`
-    return normalized.replace(/\/[^/]+$/, '')
-  }
-
-  return ''
-}
-
-const toProjectMediaItem = (entry, projectRootPath, index) => {
-  const item = typeof entry === 'string' ? { name: entry } : entry
-  if (!item || typeof item !== 'object') return null
-
-  const name = typeof item.name === 'string' ? item.name.trim() : ''
-  if (!name || item.include === false || item.exclude === true || item.doNotInclude === true) return null
-
-  const basename = name.split('/').pop() || name
-  if (/^cover\./i.test(basename)) return null
-
-  const src = joinPathSegments(projectRootPath, 'media', name)
-  const poster =
-    typeof item.poster === 'string' && item.poster.trim().length > 0
-      ? item.poster.startsWith('/')
-        ? item.poster
-        : joinPathSegments(projectRootPath, 'media', item.poster)
-      : undefined
-
-  return {
-    src,
-    poster,
-    type: typeof item.type === 'string' && item.type.trim().length > 0 ? item.type.trim() : undefined,
-    caption: typeof item.caption === 'string' && item.caption.trim().length > 0 ? item.caption.trim() : undefined,
-    alt: typeof item.alt === 'string' && item.alt.trim().length > 0 ? item.alt.trim() : `${basename} preview`,
-    sortOrder: Number.isFinite(item.sortOrder) ? item.sortOrder : index
-  }
-}
-
-const normalizeProjectMediaItems = (entries, projectRootPath) => {
-  if (!projectRootPath || !Array.isArray(entries)) return []
-
-  return entries
-    .map((entry, index) => toProjectMediaItem(entry, projectRootPath, index))
-    .filter(Boolean)
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map(({ sortOrder, ...item }) => item)
-}
-
-const renderInlineMarkdown = (text, keyPrefix) => {
-  if (typeof text !== 'string' || text.length === 0) return null
-
-  const tokens = []
-  const pattern = /\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)/g
-  let match = null
-  let lastIndex = 0
-  let tokenIndex = 0
-
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      tokens.push(
-        <span key={`${keyPrefix}-text-${tokenIndex}`}>{text.slice(lastIndex, match.index)}</span>
-      )
-      tokenIndex += 1
-    }
-
-    if (match[1]) {
-      tokens.push(<strong key={`${keyPrefix}-strong-${tokenIndex}`}>{match[1]}</strong>)
-    } else if (match[2]) {
-      tokens.push(
-        <code
-          key={`${keyPrefix}-code-${tokenIndex}`}
-          className="rounded bg-slate-100 px-1 py-0.5 text-[0.92em] text-slate-700"
-        >
-          {match[2]}
-        </code>
-      )
-    } else if (match[3] && match[4]) {
-      tokens.push(
-        <a
-          key={`${keyPrefix}-link-${tokenIndex}`}
-          href={match[4]}
-          target="_blank"
-          rel="noreferrer"
-          className="font-medium text-slate-700 underline-offset-2 hover:text-slate-900 hover:underline"
-        >
-          {match[3]}
-        </a>
-      )
-    }
-
-    tokenIndex += 1
-    lastIndex = pattern.lastIndex
-  }
-
-  if (lastIndex < text.length) {
-    tokens.push(<span key={`${keyPrefix}-tail-${tokenIndex}`}>{text.slice(lastIndex)}</span>)
-  }
-
-  return tokens
-}
-
-const parseMarkdownBlocks = (markdown) => {
-  if (typeof markdown !== 'string' || markdown.trim().length === 0) return []
-
-  const blocks = []
-  const lines = markdown.split(/\r?\n/)
-  let index = 0
-
-  while (index < lines.length) {
-    const trimmed = lines[index].trim()
-    if (!trimmed) {
-      index += 1
-      continue
-    }
-
-    if (trimmed.startsWith('## ')) {
-      blocks.push({ type: 'h2', text: trimmed.slice(3).trim() })
-      index += 1
-      continue
-    }
-
-    if (trimmed.startsWith('### ')) {
-      blocks.push({ type: 'h3', text: trimmed.slice(4).trim() })
-      index += 1
-      continue
-    }
-
-    if (trimmed.startsWith('> ')) {
-      const quoteLines = []
-      while (index < lines.length && lines[index].trim().startsWith('> ')) {
-        quoteLines.push(lines[index].trim().slice(2).trim())
-        index += 1
-      }
-      blocks.push({ type: 'blockquote', text: quoteLines.join(' ') })
-      continue
-    }
-
-    if (trimmed.startsWith('- ')) {
-      const items = []
-      while (index < lines.length && lines[index].trim().startsWith('- ')) {
-        items.push(lines[index].trim().slice(2).trim())
-        index += 1
-      }
-      blocks.push({ type: 'ul', items })
-      continue
-    }
-
-    const paragraphLines = []
-    while (index < lines.length) {
-      const paragraphCandidate = lines[index].trim()
-      if (!paragraphCandidate) {
-        index += 1
-        break
-      }
-      if (
-        paragraphCandidate.startsWith('## ') ||
-        paragraphCandidate.startsWith('### ') ||
-        paragraphCandidate.startsWith('> ') ||
-        paragraphCandidate.startsWith('- ')
-      ) {
-        break
-      }
-      paragraphLines.push(paragraphCandidate)
-      index += 1
-    }
-
-    if (paragraphLines.length > 0) {
-      blocks.push({ type: 'p', text: paragraphLines.join(' ') })
-    }
-  }
-
-  return blocks
-}
-
-function MarkdownProjectBody({ markdown }) {
-  const blocks = useMemo(() => parseMarkdownBlocks(markdown), [markdown])
-
-  if (blocks.length === 0) return null
-
-  return (
-    <div className="space-y-4">
-      {blocks.map((block, blockIndex) => {
-        if (block.type === 'h2') {
-          return (
-            <h2 key={`block-${blockIndex}`} className="text-base font-semibold text-slate-900">
-              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
-            </h2>
-          )
-        }
-
-        if (block.type === 'h3') {
-          return (
-            <h3 key={`block-${blockIndex}`} className="text-sm font-semibold text-slate-900">
-              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
-            </h3>
-          )
-        }
-
-        if (block.type === 'ul') {
-          return (
-            <ul key={`block-${blockIndex}`} className="space-y-1.5 text-sm text-slate-600">
-              {block.items.map((item, itemIndex) => (
-                <li key={`block-${blockIndex}-item-${itemIndex}`} className="flex gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
-                  <span>{renderInlineMarkdown(item, `block-${blockIndex}-item-${itemIndex}`)}</span>
-                </li>
-              ))}
-            </ul>
-          )
-        }
-
-        if (block.type === 'blockquote') {
-          return (
-            <blockquote
-              key={`block-${blockIndex}`}
-              className="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-sky-950 shadow-sm"
-            >
-              {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
-            </blockquote>
-          )
-        }
-
-        return (
-          <p key={`block-${blockIndex}`} className="text-sm leading-relaxed text-slate-600">
-            {renderInlineMarkdown(block.text, `block-${blockIndex}`)}
-          </p>
-        )
-      })}
-    </div>
-  )
-}
-
 export default function ProjectPage() {
   const { slug } = useParams()
   const location = useLocation()
   const backToProjectsUrl = location.search ? `/projects${location.search}` : '/projects'
-  const baseProject = projectsData.find((p) => p.slug === slug)
-  const isMarkdownProject = Boolean(baseProject?.metadataUrl || baseProject?.contentUrl)
-  const [markdownProjectMeta, setMarkdownProjectMeta] = useState(null)
-  const [markdownBody, setMarkdownBody] = useState('')
-  const [isMarkdownLoading, setIsMarkdownLoading] = useState(false)
-  const [loadedMarkdownSlug, setLoadedMarkdownSlug] = useState('')
-  const hasLoadedMarkdownForCurrentSlug = loadedMarkdownSlug === slug
-  const project = useMemo(() => {
-    if (!baseProject) return null
-    if (!isMarkdownProject || !hasLoadedMarkdownForCurrentSlug || !markdownProjectMeta) return baseProject
-    return { ...baseProject, ...markdownProjectMeta, slug: baseProject.slug }
-  }, [baseProject, hasLoadedMarkdownForCurrentSlug, isMarkdownProject, markdownProjectMeta])
-  const useMarkdownContent = isMarkdownProject && hasLoadedMarkdownForCurrentSlug && markdownBody.trim().length > 0
-  const showStructuredSections = !isMarkdownProject || (!isMarkdownLoading && !useMarkdownContent)
+  const project = projectsData.find((p) => p.slug === slug)
+  const projectContent = typeof project?.content === 'string' ? project.content : ''
+  const useMarkdownContent = projectContent.trim().length > 0
+  const showStructuredSections = !useMarkdownContent
   const metaDescription = project?.valueProp || project?.shortDescription || project?.longDescription || project?.description || SITE_DESCRIPTION
   const metaTitle = project ? `${project.title} | Zachary Gameiro` : DEFAULT_TITLE
   const pageUrl =
@@ -404,94 +151,6 @@ export default function ProjectPage() {
   useEffect(() => {
     document.title = project ? `${project.title} | Zachary Gameiro` : DEFAULT_TITLE
   }, [project])
-
-  useEffect(() => {
-    let isCanceled = false
-
-    if (!baseProject || !isMarkdownProject) {
-      setMarkdownProjectMeta(null)
-      setMarkdownBody('')
-      setIsMarkdownLoading(false)
-      setLoadedMarkdownSlug('')
-      return () => {
-        isCanceled = true
-      }
-    }
-
-    const metadataUrl = baseProject.metadataUrl
-    const contentUrl = baseProject.contentUrl
-    const projectRootPath = getProjectRootPath(baseProject)
-    const mediaMetadataUrl = projectRootPath ? joinPathSegments(projectRootPath, 'media', 'metadata.json') : ''
-
-    if (!metadataUrl && !contentUrl) {
-      setMarkdownProjectMeta(null)
-      setMarkdownBody('')
-      setIsMarkdownLoading(false)
-      setLoadedMarkdownSlug('')
-      return () => {
-        isCanceled = true
-      }
-    }
-
-    const loadMarkdownProject = async () => {
-      setIsMarkdownLoading(true)
-
-      let loadedMetadata = null
-      let loadedBody = ''
-
-      if (metadataUrl) {
-        try {
-          const response = await fetch(metadataUrl)
-          if (response.ok) {
-            loadedMetadata = await response.json()
-          }
-        } catch (error) {
-          loadedMetadata = null
-        }
-      }
-
-      let mediaMetadata = []
-      if (mediaMetadataUrl) {
-        try {
-          const response = await fetch(mediaMetadataUrl)
-          if (response.ok) {
-            const mediaEntries = await response.json()
-            mediaMetadata = normalizeProjectMediaItems(mediaEntries, projectRootPath)
-          }
-        } catch (error) {
-          mediaMetadata = []
-        }
-      }
-
-      if (contentUrl) {
-        try {
-          const response = await fetch(contentUrl)
-          if (response.ok) {
-            loadedBody = await response.text()
-          }
-        } catch (error) {
-          loadedBody = ''
-        }
-      }
-
-      if (!isCanceled) {
-        const mergedMetadata = loadedMetadata && typeof loadedMetadata === 'object' ? { ...loadedMetadata } : {}
-        if (mediaMetadata.length > 0) {
-          mergedMetadata.screenshots = mediaMetadata
-        }
-        setMarkdownProjectMeta(mergedMetadata)
-        setMarkdownBody(loadedBody)
-        setLoadedMarkdownSlug(baseProject.slug)
-        setIsMarkdownLoading(false)
-      }
-    }
-
-    loadMarkdownProject()
-
-    return () => {
-      isCanceled = true
-    }
-  }, [baseProject, isMarkdownProject])
 
   useEffect(() => {
     const metaUpdates = [
@@ -1022,16 +681,9 @@ export default function ProjectPage() {
                     </nav>
                   )}
 
-                  {isMarkdownProject && isMarkdownLoading && (
-                    <section id="overview" className="scroll-mt-28">
-                      <h2 className="text-base font-semibold text-slate-900">Loading content</h2>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-600">Loading markdown project content…</p>
-                    </section>
-                  )}
-
                   {useMarkdownContent && (
                     <section id="overview" className="scroll-mt-28">
-                      <MarkdownProjectBody markdown={markdownBody} />
+                      <MarkdownContent markdown={projectContent} />
                     </section>
                   )}
 

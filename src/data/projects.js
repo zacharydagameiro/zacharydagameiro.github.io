@@ -1,0 +1,251 @@
+import autoSalesPdfAutomatorContent from '../content/projects/auto-sales-pdf-automator.md?raw'
+import bcFerriesTerminalBookerContent from '../content/projects/bc-ferries-terminal-booker.md?raw'
+import celestiaContent from '../content/projects/celestia-affirmations-astrology.md?raw'
+import haulrContent from '../content/projects/haulr-concrete-fleet.md?raw'
+import meiroTiganContent from '../content/projects/meiro-tigan.md?raw'
+import miroSmlmClusteringContent from '../content/projects/miro-smlm-clustering.md?raw'
+import proteinPdbViewerContent from '../content/projects/protein-pdb-viewer.md?raw'
+import receiptOcrContent from '../content/projects/receipt-ocr-transactions.md?raw'
+import ti84WirelessMessagingContent from '../content/projects/ti84-wireless-messaging.md?raw'
+import transactionSpendingTrackerContent from '../content/projects/transaction-spending-tracker.md?raw'
+
+const projects = [
+  {
+    slug: 'receipt-ocr-transactions',
+    title: 'Receipt OCR',
+    caption: 'Structured Transactions',
+    coverImageUrl: '/projects/receipt-ocr-transactions/cover.jpg',
+    shortDescription: 'Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.',
+    content: receiptOcrContent,
+    year: '2025',
+    valueProp: 'Fast, low-cost receipt-to-JSON extraction: OCR on Cloud Run plus layout reconstruction enables small-LLM parsing without multimodal overhead.',
+    status: 'Prototype',
+    stackGroups: [
+      { label: 'Backend', items: ['Python'] },
+      { label: 'AI / Data', items: ['PaddleOCR', 'LLM'] },
+      { label: 'Infra', items: ['Cloud Run', 'Docker', 'GCP'] },
+    ],
+    screenshots: [
+      {
+        src: '/projects/receipt-ocr-transactions/media/receipt-ocr-img1.jpg',
+        type: 'image',
+        caption: 'Receipt OCR pipeline output preview',
+      },
+    ],
+    tags: ['Python', 'OCR', 'LLM', 'GCP'],
+    repoUrl: {
+      label: 'GitHub Repo',
+      url: 'https://github.com/zacharydagameiro/receipt-ocr',
+    },
+    demoUrl: {
+      label: 'Preview (Google Cloud Run)',
+      url: 'https://receipt-ocr-demo-944565818393.us-central1.run.app/',
+    },
+    featured: true,
+    category: 'ml-ai',
+  },
+  {
+    slug: 'ti84-wireless-messaging',
+    title: 'TI-84 Wireless Messaging',
+    caption: 'Embedded calculator messaging system',
+    coverImageUrl: '/projects/ti84-wireless-messaging/cover.jpg',
+    shortDescription: 'Built wireless messaging between TI-84 calculators using embedded Arduino + RF hardware.',
+    content: ti84WirelessMessagingContent,
+    motivation:
+      'I noticed TI-84 calculators have TRS link ports and started digging into what they could do. After learning they are mainly used to share charts/data, I found a driver online that let TI-BASIC read from and write to the TRS cable directly. That inspired me to build a minimal chat interface and message protocol. The key idea was simple: if I can transmit messages over a wire, I can replace the wire with RF and make calculator-to-calculator wireless messaging.',
+    year: '2020',
+    valueProp: 'Turn stock TI-84 calculators into portable wireless chat devices with custom embedded hardware and firmware.',
+    status: 'Prototype',
+    stackGroups: [
+      { label: 'Software', items: ['TI-BASIC', 'Arduino C/C++'] },
+      { label: 'Hardware', items: ['Arduino Nano', 'nRF24L01 Transceiver', 'Capacitors & wiring', 'Mini I/O switch'] },
+      { label: 'Tools', items: ['Soldering + assembly'] },
+    ],
+    screenshots: [
+      {
+        src: '/projects/ti84-wireless-messaging/media/ti84-wireless-mov1.mp4',
+        type: 'video',
+        caption: 'TI-84 wireless messaging demo',
+      },
+    ],
+    tags: ['Arduino', 'C/C++', 'TI-BASIC', 'Embedded'],
+    repoUrl: null,
+    demoUrl: {
+      label: 'Reddit Demo',
+      url: 'https://www.reddit.com/r/ti84hacks/comments/f5k8x1/wireless_communication/',
+    },
+    featured: true,
+    category: 'school',
+    references: [
+      {
+        label: 'Merthsoft TI-83+/84+ Link Guide',
+        href: 'https://merthsoft.com/linkguide/ti83+/index.html',
+        note: 'Primary reference used to understand the link protocol and shape the message transport implementation.',
+      },
+    ],
+  },
+  {
+    slug: 'miro-smlm-clustering',
+    title: 'SMLM Clustering with Graph Embeddings',
+    caption: 'SFU / MIRO-based pipeline',
+    coverImageUrl: '/projects/miro-smlm-clustering/cover.jpg',
+    shortDescription: 'Built and trained an SMLM clustering pipeline using MIRO graph embeddings with DBSCAN/HDBSCAN.',
+    content: miroSmlmClusteringContent,
+    year: '2025',
+    valueProp: 'Cluster single-molecule localization microscopy data using MIRO graph embeddings and density-based clustering.',
+    status: 'Research project',
+    stack: ['Python', 'PyTorch', 'MIRO', 'DBSCAN', 'HDBSCAN'],
+    tags: ['Python', 'PyTorch', 'ML', 'HDBSCAN'],
+    repoUrl: {
+      label: 'GitHub Repo',
+      url: 'https://github.com/sfu-cmpt340/2025_3_project_14',
+    },
+    demoUrl: null,
+    featured: true,
+    category: 'bio',
+    categories: ['bio', 'ml-ai', 'school'],
+  },
+  {
+    slug: 'auto-sales-pdf-automator',
+    title: 'Auto Sales PDF Automator',
+    caption: 'Sherwood Park Toyota',
+    shortDescription: 'Automated dealership PDF paperwork from structured customer and vehicle data.',
+    content: autoSalesPdfAutomatorContent,
+    year: '2025',
+    valueProp: 'Generate clean dealership PDFs automatically from structured customer and vehicle data.',
+    status: 'Client project',
+    stack: ['Python', 'PDF form filling', 'Automation'],
+    tags: ['Python', 'PDF', 'Automation'],
+    repoUrl: null,
+    demoUrl: null,
+    featured: false,
+    category: 'freelance',
+  },
+  {
+    slug: 'transaction-spending-tracker',
+    title: 'Transaction & Spending Tracker',
+    caption: 'Multi-source finance dashboard',
+    shortDescription: 'Built a finance dashboard that ingests transactions from multiple sources and aggregates spending by time and timezone.',
+    content: transactionSpendingTrackerContent,
+    year: '2025',
+    tags: ['React', 'JavaScript', 'Finance', 'Data'],
+    repoUrl: null,
+    demoUrl: null,
+    featured: false,
+    category: null,
+  },
+  {
+    slug: 'celestia-affirmations-astrology',
+    title: 'Celestia',
+    caption: 'Astrology + Daily Affirmations App',
+    coverImageUrl: '/projects/celestia-affirmations-astrology/cover.jpg',
+    shortDescription: 'Built with a friend as a side mobile app concept combining daily affirmations with personalized astrology content.',
+    content: celestiaContent,
+    year: '2025',
+    tags: ['React Native', 'Mobile', 'UI/UX', 'Product'],
+    repoUrl: null,
+    demoUrl: null,
+    featured: false,
+    category: null,
+  },
+  {
+    slug: 'protein-pdb-viewer',
+    title: 'PDB Structure Viewer',
+    caption: 'Secondary structure handling',
+    shortDescription: 'Prototyped a browser-based viewer for PDB files with helix/sheet visualization and secondary-structure annotations.',
+    content: proteinPdbViewerContent,
+    year: '2025',
+    tags: ['JavaScript', 'PDB', 'Visualization', 'Bioinformatics'],
+    repoUrl: null,
+    demoUrl: null,
+    featured: false,
+    category: 'bio',
+  },
+  {
+    slug: 'haulr-concrete-fleet',
+    title: 'Haulr',
+    caption: 'Concrete Operations Platform',
+    coverImageUrl: '/projects/haulr-concrete-fleet/cover.jpg',
+    shortDescription: 'Built a concrete ops platform for lead intake, quoting, scheduling, and job cost tracking.',
+    content: haulrContent,
+    year: '2026',
+    valueProp: 'Purpose-built concrete workflow software: move from request to scheduled work with shared visibility across sales, ops, and field teams.',
+    status: 'Active rebuild',
+    stackGroups: [
+      { label: 'Frontend', items: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'shadcn/ui'] },
+      { label: 'Backend', items: ['Firebase Auth', 'Firestore', 'Firebase Cloud Functions'] },
+      { label: 'Integrations', items: ['Stripe', 'Mapbox'] },
+    ],
+    screenshots: [
+      {
+        src: '/projects/haulr-concrete-fleet/media/haulr-img1.jpg',
+        type: 'image',
+        caption: 'Haulr dashboard UI preview',
+      },
+      {
+        src: '/projects/haulr-concrete-fleet/media/haulr-img2.jpg',
+        type: 'image',
+      },
+    ],
+    tags: ['React', 'TypeScript', 'Firebase', 'Operations', 'SaaS'],
+    repoUrl: {
+      label: 'GitHub Repo',
+      url: 'https://github.com/zacharydagameiro/haulr',
+    },
+    demoUrl: {
+      label: 'Live Dashboard',
+      url: 'https://dashboard.haulrbc.com',
+    },
+    featured: true,
+    category: 'freelance',
+    categories: ['freelance', 'web', 'product'],
+  },
+  {
+    slug: 'meiro-tigan',
+    title: 'Meiro Tigan',
+    caption: 'Lead gen website for concrete contractor',
+    coverImageUrl: '/projects/meiro-tigan/cover.jpg',
+    shortDescription: 'Built a responsive lead-gen site and quote form for a concrete contractor in the Lower Mainland.',
+    content: meiroTiganContent,
+    year: '2025',
+    screenshots: [
+      {
+        src: '/projects/meiro-tigan/media/meirotigan-homepage.jpg',
+        type: 'image',
+        alt: 'Meiro Tigan website homepage',
+        caption: 'Homepage hero and lead-generation layout.',
+      },
+    ],
+    tags: ['React', 'Web', 'Responsive', 'Lead gen'],
+    repoUrl: null,
+    demoUrl: {
+      label: 'Live Site',
+      url: 'https://meirotigan.com',
+    },
+    featured: false,
+    category: 'freelance',
+  },
+  {
+    slug: 'bc-ferries-terminal-booker',
+    title: 'Ferry Terminal Booker',
+    caption: 'File-backed reservation system (C)',
+    coverImageUrl: '/projects/bc-ferries-terminal-booker/cover.jpg',
+    shortDescription:
+      'Built a C-based terminal reservation system for a mock BC Ferries client using file storage (no database) with search, edit/delete, payments, and occupancy checks.',
+    content: bcFerriesTerminalBookerContent,
+    year: '2025',
+    valueProp: 'Manage ferry customers, reservations, payments, and occupancy in a fast terminal workflow backed by flat-file storage.',
+    status: 'School project',
+    stack: ['C', 'File I/O', 'Data serialization', 'CLI'],
+    tags: ['C', 'File I/O', 'CLI', 'School'],
+    repoUrl: {
+      label: 'GitHub Repo',
+      url: 'https://github.com/zacharydagameiro/Ferry',
+    },
+    demoUrl: null,
+    featured: false,
+    category: 'school',
+  },
+]
+
+export default projects

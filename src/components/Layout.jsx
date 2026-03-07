@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import aboutData from '../data/about.json'
+import projectsData from '../data/projects'
 import Footer from './Footer'
 import { resolveAssetUrl } from '../utils/assetUrl'
 
@@ -9,13 +10,14 @@ export default function Layout({ children }) {
   const navigate = useNavigate()
   const [mobileNavMounted, setMobileNavMounted] = useState(false)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const projectCount = projectsData.length
   const desktopNavRef = useRef(null)
   const desktopLinkRefs = useRef([])
   const [desktopIndicatorStyle, setDesktopIndicatorStyle] = useState(null)
   const desktopNavItems = [
     { label: 'Home', to: '/' },
     { label: 'About', to: '/about' },
-    { label: 'Projects', to: '/projects' },
+    { label: `Projects (${projectCount})`, to: '/projects' },
     { label: 'Resumes', to: '/resumes' },
   ]
   const activeDesktopIndex = desktopNavItems.findIndex((item) => {
@@ -204,7 +206,7 @@ export default function Layout({ children }) {
                 className={mobileNavClass}
                 onClick={(event) => navigateToProjectsTarget(event, true)}
               >
-                Projects
+                {`Projects (${projectCount})`}
               </NavLink>
               <div className="mt-auto border-t border-slate-200 pt-4">
                 <Link

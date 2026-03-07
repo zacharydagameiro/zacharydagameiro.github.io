@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import projectsData from '../data/projects.json'
+import projectsData from '../data/projects'
 import aboutData from '../data/about.json'
 import HomeSidebar from '../components/HomeSidebar'
+import ExperienceTimelineList from '../components/ExperienceTimelineList.jsx'
 import ProjectCard from '../components/ProjectCard'
 import Modal from '../components/Modal.jsx'
 import { resolveAssetUrl } from '../utils/assetUrl'
@@ -157,48 +158,12 @@ export default function Home() {
         )}
 
         {experience.length > 0 && (
-          <section className="border-l-0 pl-0 sm:border-l-4 sm:border-l-emerald-600 sm:pl-4">
+          <section>
             <h2 className="text-xl font-semibold text-slate-900 flex items-center gap-2">
               <SectionIcon type="experience" className="h-5 w-5 text-emerald-600" />
               Experience
             </h2>
-            <ul className="mt-4 space-y-5">
-              {experience.slice(0, 2).map((item, i) => {
-                const firstLine = item.description ? (item.description.split('.')[0] + (item.description.includes('.') ? '.' : '')).slice(0, 100) : ''
-                return (
-                  <li key={i}>
-                    <button
-                      type="button"
-                      onClick={() => handleExperienceClick(item)}
-                      className="w-full text-left rounded-xl border border-slate-200 bg-emerald-50/50 p-4 shadow-sm transition hover:border-slate-300 hover:bg-emerald-50/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
-                    >
-                      <div className="flex items-start gap-3">
-                        {item.logoUrl && (
-                          <img
-                            src={resolveAssetUrl(item.logoUrl)}
-                            alt={`${item.company} logo`}
-                            className="h-10 w-10 shrink-0 rounded-md border border-slate-200 bg-white object-contain p-1"
-                          />
-                        )}
-                        <div className="min-w-0">
-                          <p className="font-semibold text-slate-900">{item.title} · {item.company}</p>
-                          {item.dates && <p className="mt-0.5 text-sm text-slate-500">{item.dates}</p>}
-                          {firstLine && (
-                            <p className="mt-1.5 text-sm text-slate-600 leading-relaxed">
-                              {firstLine}
-                              {item.description && item.description.length > 100 ? '…' : ''}
-                            </p>
-                          )}
-                          <p className="mt-2 text-xs font-medium text-emerald-700">
-                            View more details
-                          </p>
-                        </div>
-                      </div>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
+            <ExperienceTimelineList items={experience.slice(0, 2)} onItemClick={handleExperienceClick} />
             <Link
               to="/about#experience"
               className="mt-4 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"

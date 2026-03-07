@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import projectsData from '../data/projects.json'
+import projectsData from '../data/projects'
 import ProjectCard from '../components/ProjectCard'
 import { useSearchParams } from 'react-router-dom'
 import { PROJECTS_LAST_UPDATED } from '../data/siteMeta'
