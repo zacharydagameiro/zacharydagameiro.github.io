@@ -617,9 +617,13 @@ export default function ProjectPage() {
                 </div>
 
                 {(languageBadges.length > 0 || repoLink || demoLink || caseStudyLink) && (
-                  <div className="flex flex-col items-start gap-3 sm:items-end">
+                  <div className="flex flex-col items-start gap-2 sm:items-end">
                     {languageBadges.length > 0 && (
-                      <ProjectLanguageBadges className="justify-end" languages={languageBadges} />
+                      <ProjectLanguageBadges
+                        className="justify-end"
+                        languages={languageBadges}
+                        sizeClassName="h-7 w-7"
+                      />
                     )}
                     <div className="flex flex-wrap gap-2 sm:justify-end">
                       {demoLink && (

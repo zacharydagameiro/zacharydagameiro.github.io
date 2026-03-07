@@ -1,6 +1,6 @@
 {
   "title": "Receipt OCR",
-  "caption": "Structured Transactions",
+  "caption": "Receipt-to-JSON Extraction",
   "coverImageUrl": "/projects/receipt-ocr-transactions/cover.jpg",
   "shortDescription": "Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.",
   "year": "2025",

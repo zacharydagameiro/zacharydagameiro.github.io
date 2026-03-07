@@ -1,8 +1,8 @@
 {
   "title": "Ploutos",
-  "caption": "Multi-source finance dashboard",
+  "caption": "Personal Finance Tracker",
   "coverImageUrl": "/projects/transaction-spending-tracker/cover.jpg",
-  "shortDescription": "Built a finance dashboard that ingests transactions from multiple sources and aggregates spending by time and timezone.",
+  "shortDescription": "Built a React Native finance app with Supabase to ingest transactions and track spending.",
   "year": "2025",
   "tags": ["React", "JavaScript", "Finance", "Data"],
   "repoUrl": null,

@@ -1,6 +1,6 @@
 {
   "title": "SMLM Clustering with Graph Embeddings",
-  "caption": "SFU / MIRO-based pipeline",
+  "caption": "SMLM Graph Clustering",
   "coverImageUrl": "/projects/miro-smlm-clustering/cover.jpg",
   "shortDescription": "Built and trained an SMLM clustering pipeline with MIRO graph embeddings.",
   "year": "2025",

@@ -267,7 +267,11 @@ export default function ProjectCard({ project, listSearch = '' }) {
             aria-hidden
           />
           {languageBadges.length > 0 && (
-            <ProjectLanguageBadges className="absolute right-3 top-3 z-10 justify-end" languages={languageBadges} />
+            <ProjectLanguageBadges
+              className="absolute right-3 top-3 z-10 justify-end"
+              languages={languageBadges}
+              sizeClassName="h-7 w-7"
+            />
           )}
         </div>
       )}

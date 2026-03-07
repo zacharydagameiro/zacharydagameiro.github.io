@@ -93,12 +93,12 @@ const getLanguageDefinition = (token) => {
   )
 }
 
-function LanguageBadge({ language }) {
+function LanguageBadge({ language, sizeClassName = 'h-8 w-8' }) {
   const [showFallback, setShowFallback] = useState(false)
 
   return (
     <span
-      className="relative inline-flex h-8 w-8 items-center justify-center"
+      className={`relative inline-flex items-center justify-center ${sizeClassName}`}
       title={language.label}
       aria-label={language.label}
     >
@@ -150,14 +150,14 @@ export function extractProjectLanguages({ stackGroups, stack, tags }) {
   return uniqueLanguages
 }
 
-export default function ProjectLanguageBadges({ languages = [], className = '' }) {
+export default function ProjectLanguageBadges({ languages = [], className = '', sizeClassName = 'h-8 w-8' }) {
   if (!Array.isArray(languages) || languages.length === 0) return null
 
   return (
     <ul className={`flex flex-wrap items-center gap-2 ${className}`.trim()} aria-label="Project languages">
       {languages.map((language) => (
         <li key={language.key}>
-          <LanguageBadge language={language} />
+          <LanguageBadge language={language} sizeClassName={sizeClassName} />
         </li>
       ))}
     </ul>
