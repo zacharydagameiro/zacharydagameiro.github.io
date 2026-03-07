@@ -2,7 +2,7 @@
   "title": "SMLM Clustering with Graph Embeddings",
   "caption": "SFU / MIRO-based pipeline",
   "coverImageUrl": "/projects/miro-smlm-clustering/cover.jpg",
-  "shortDescription": "Built and trained an SMLM clustering pipeline using MIRO graph embeddings with DBSCAN/HDBSCAN.",
+  "shortDescription": "Built and trained an SMLM clustering pipeline with MIRO graph embeddings.",
   "year": "2025",
   "valueProp": "Cluster single-molecule localization microscopy data using MIRO graph embeddings and density-based clustering.",
   "status": "Research project",

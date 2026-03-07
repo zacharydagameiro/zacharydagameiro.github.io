@@ -258,6 +258,14 @@ export default function ProjectCard({ project, listSearch = '' }) {
             decoding="async"
             className="h-32 w-full object-cover transition duration-200 hover:scale-[1.02]"
           />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                'linear-gradient(180deg, rgba(var(--project-glow-rgb), 0.14) 0%, rgba(var(--project-glow-rgb), 0.08) 42%, rgba(var(--project-glow-rgb), 0.3) 100%)',
+            }}
+            aria-hidden
+          />
           {languageBadges.length > 0 && (
             <ProjectLanguageBadges className="absolute right-3 top-3 z-10 justify-end" languages={languageBadges} />
           )}

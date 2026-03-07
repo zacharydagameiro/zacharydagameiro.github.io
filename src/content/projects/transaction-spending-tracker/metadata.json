@@ -1,6 +1,7 @@
 {
   "title": "Ploutos",
   "caption": "Multi-source finance dashboard",
+  "coverImageUrl": "/projects/transaction-spending-tracker/cover.jpg",
   "shortDescription": "Built a finance dashboard that ingests transactions from multiple sources and aggregates spending by time and timezone.",
   "year": "2025",
   "tags": ["React", "JavaScript", "Finance", "Data"],

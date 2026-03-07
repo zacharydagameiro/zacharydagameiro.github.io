@@ -10,7 +10,7 @@ const contentModules = import.meta.glob('../content/projects/*/content.md', {
   query: '?raw',
   import: 'default',
 })
-
+ 
 const getSlugFromPath = (path) => {
   const match = path.match(/\/projects\/([^/]+)\/[^/]+$/)
   return match ? match[1] : null

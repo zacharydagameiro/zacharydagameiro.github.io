@@ -1,10 +1,10 @@
 {
   "title": "Haulr",
-  "caption": "Concrete Operations Platform",
+  "caption": "Construction Operations Platform",
   "coverImageUrl": "/projects/haulr-concrete-fleet/cover.jpg",
-  "shortDescription": "Built a concrete ops platform for lead intake, quoting, scheduling, and job cost tracking.",
+  "shortDescription": "Built a construction ops platform for lead intake, quoting, scheduling, and job cost tracking.",
   "year": "2026",
-  "valueProp": "Purpose-built concrete workflow software: move from request to scheduled work with shared visibility across sales, ops, and field teams.",
+  "valueProp": "Purpose-built construction operations software: move from request to scheduled work with shared visibility across sales, ops, and field teams.",
   "status": "Active rebuild",
   "stackGroups": [
     { "label": "Frontend", "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui"] },
