@@ -8,12 +8,7 @@
     "contentUrl": "/projects/receipt-ocr-transactions/content.md",
     "shortDescription": "Deployed PaddleOCR on Cloud Run to parse receipt images into structured JSON.",
     "year": "2025",
-    "tags": [
-      "Python",
-      "OCR",
-      "LLM",
-      "GCP"
-    ],
+    "tags": ["Python", "OCR", "LLM", "GCP"],
     "repoUrl": {
       "label": "GitHub Repo",
       "url": "https://github.com/zacharydagameiro/receipt-ocr"
@@ -29,150 +24,30 @@
     "slug": "ti84-wireless-messaging",
     "title": "TI-84 Wireless Messaging",
     "caption": "Embedded calculator messaging system",
-    "coverImageUrl": "/covers/ti84-wireless-messaging.jpg",
+    "coverImageUrl": "/projects/ti84-wireless-messaging/cover.jpg",
+    "metadataUrl": "/projects/ti84-wireless-messaging/metadata.json",
+    "contentUrl": "/projects/ti84-wireless-messaging/content.md",
     "shortDescription": "Built wireless messaging between TI-84 calculators using embedded Arduino + RF hardware.",
-    "description": "Built a hardware-software messaging system by embedding an Arduino Nano and nRF24L01 RF transceiver inside TI-84 calculators. Reverse-engineered the TI-84 TRS link behavior and implemented a bridge between TI-BASIC UI flows and Arduino firmware packet handling for real-time wireless chat.",
-    "longDescription": "Designed and built an end-to-end wireless messaging stack for TI-84 calculators. Hardware integration included Arduino Nano, nRF24L01 transceiver, wiring, capacitors for power stability, a mini I/O switch, and internal assembly/soldering inside the calculator shell. Software work included TI-BASIC client UX plus Arduino C/C++ firmware for framing, retries, and message delivery across multiple devices. The system achieved stable real-world messaging while operating under strict power, space, and timing constraints.",
-    "motivation": "I noticed TI-84 calculators have TRS link ports and started digging into what they could do. After learning they are mainly used to share charts/data, I found a driver online that let TI-BASIC read from and write to the TRS cable directly. That inspired me to build a minimal chat interface and message protocol. The key idea was simple: if I can transmit messages over a wire, I can replace the wire with RF and make calculator-to-calculator wireless messaging.",
     "year": "2020",
-    "stack": [
-      "Arduino Nano",
-      "nRF24L01 Transceiver",
-      "TI-BASIC",
-      "Arduino C/C++",
-      "Capacitors & wiring",
-      "Mini I/O switch",
-      "Soldering + assembly"
-    ],
-    "stackGroups": [
-      {
-        "label": "Software",
-        "items": ["TI-BASIC", "Arduino C/C++"]
-      },
-      {
-        "label": "Hardware",
-        "items": ["Arduino Nano", "nRF24L01 Transceiver", "Capacitors & wiring", "Mini I/O switch"]
-      },
-      {
-        "label": "Tools",
-        "items": ["Soldering + assembly"]
-      }
-    ],
-    "valueProp": "Turn stock TI-84 calculators into portable wireless chat devices with custom embedded hardware and firmware.",
-    "status": "Prototype",
-    "highlights": [
-      "Reverse-engineered TI-84 link behavior to bridge calculator I/O with Arduino firmware",
-      "Embedded Arduino Nano + nRF24L01 hardware inside the calculator enclosure",
-      "Added power conditioning (capacitors) and switch control for reliable operation",
-      "Built TI-BASIC chat UI with Arduino-side packet handling and retries"
-    ],
-    "nextSteps": [
-      "Measure battery impact and optimize idle/runtime power draw",
-      "Improve message history and ergonomics in the TI-BASIC interface",
-      "Design a cleaner internal mounting approach for repeatable assembly"
-    ],
-    "screenshots": [
-      {
-        "src": "/media/ti84-wireless-mov1.mp4",
-        "type": "video",
-        "caption": "TI-84 wireless messaging demo"
-      }
-    ],
-    "tags": [
-      "Arduino",
-      "C/C++",
-      "TI-BASIC",
-      "Embedded"
-    ],
-    "repoUrl": {
-      "label": "GitHub Repo",
-      "url": "https://github.com/zacharydagameiro/haulr"
-    },
+    "tags": ["Arduino", "C/C++", "TI-BASIC", "Embedded"],
+    "repoUrl": null,
     "demoUrl": {
       "label": "Reddit Demo",
       "url": "https://www.reddit.com/r/ti84hacks/comments/f5k8x1/wireless_communication/"
     },
     "featured": true,
-    "category": "school",
-    "architectureSteps": [
-      "TI-BASIC Input",
-      "Serial/TRS Bridge",
-      "Packet Encode",
-      "RF Tx/Rx (nRF24L01)",
-      "Message Parse",
-      "Chat Render"
-    ],
-    "architectureNotes": [
-      "Calculator UI runs in TI-BASIC while Arduino firmware handles transport and reliability logic",
-      "nRF24L01 provides low-latency wireless transfer between modified calculators",
-      "Capacitors and careful wiring reduced power noise/reset issues in a tight enclosure",
-      "Mechanical assembly used soldering and hot glue for routing and strain relief"
-    ],
-    "challenges": [
-      "Very limited internal space for wiring, switch placement, and RF module fit",
-      "Power instability and noise inside a constrained calculator power budget",
-      "Reliable message transfer under packet loss/interference constraints",
-      "Keeping on-calculator chat UX usable within TI-BASIC limitations"
-    ],
-    "results": [
-      {
-        "label": "System outcome",
-        "value": "Working multi-calculator wireless chat prototype"
-      },
-      {
-        "label": "Reliability approach",
-        "value": "Firmware-level packet framing, retries, and parsing"
-      },
-      {
-        "label": "Hardware integration",
-        "value": "Internal Nano + nRF24L01 + conditioned power delivery"
-      },
-      {
-        "label": "End-to-end scope",
-        "value": "Reverse engineering, soldering, firmware, and TI-BASIC UX"
-      }
-    ],
-    "references": [
-      {
-        "label": "Merthsoft TI-83+/84+ Link Guide",
-        "href": "https://merthsoft.com/linkguide/ti83+/index.html",
-        "note": "Primary reference used to understand the link protocol and shape the message transport implementation."
-      }
-    ]
+    "category": "school"
   },
   {
     "slug": "miro-smlm-clustering",
     "title": "SMLM Clustering with Graph Embeddings",
     "caption": "SFU / MIRO-based pipeline",
-    "coverImageUrl": "/covers/smlm-clustering.jpg",
+    "coverImageUrl": "/projects/miro-smlm-clustering/cover.jpg",
+    "metadataUrl": "/projects/miro-smlm-clustering/metadata.json",
+    "contentUrl": "/projects/miro-smlm-clustering/content.md",
     "shortDescription": "Built and trained an SMLM clustering pipeline using MIRO graph embeddings with DBSCAN/HDBSCAN.",
-    "description": "Built a single-molecule localization microscopy (SMLM) clustering pipeline using MIRO graph embeddings and DBSCAN/HDBSCAN. Reproduced and trained MIRO on custom SMLM localization data and evaluated how embedding choices affect recovered molecular structures.",
-    "longDescription": "Built an SMLM (single-molecule localization microscopy) clustering pipeline using MIRO-based graph embeddings and density-based clustering at SFU. Reproduced and trained MIRO on custom SMLM localization data using mutual k-NN graphs. Identified molecular structures via DBSCAN/HDBSCAN and reconstruction outputs.",
     "year": "2025",
-    "stack": [
-      "Python",
-      "PyTorch",
-      "MIRO",
-      "DBSCAN",
-      "HDBSCAN"
-    ],
-    "valueProp": "Cluster single-molecule localization microscopy data using MIRO graph embeddings and density-based clustering.",
-    "status": "Research project",
-    "highlights": [
-      "Reproduced and trained MIRO on custom SMLM datasets",
-      "Used mutual k-NN graphs to build input representations",
-      "Evaluated how embedding choices affect recovered structures"
-    ],
-    "nextSteps": [
-      "Scale experiments across larger SMLM datasets",
-      "Automate hyperparameter sweeps for clustering and embeddings"
-    ],
-    "tags": [
-      "Python",
-      "PyTorch",
-      "ML",
-      "HDBSCAN"
-    ],
+    "tags": ["Python", "PyTorch", "ML", "HDBSCAN"],
     "repoUrl": {
       "label": "GitHub Repo",
       "url": "https://github.com/sfu-cmpt340/2025_3_project_14"
@@ -180,42 +55,17 @@
     "demoUrl": null,
     "featured": true,
     "category": "bio",
-    "categories": [
-      "bio",
-      "ml-ai",
-      "school"
-    ]
+    "categories": ["bio", "ml-ai", "school"]
   },
   {
     "slug": "auto-sales-pdf-automator",
     "title": "Auto Sales PDF Automator",
     "caption": "Sherwood Park Toyota",
-    "coverImageUrl": "/covers/auto-sales-pdf-automator.jpg",
+    "metadataUrl": "/projects/auto-sales-pdf-automator/metadata.json",
+    "contentUrl": "/projects/auto-sales-pdf-automator/content.md",
     "shortDescription": "Automated dealership PDF paperwork from structured customer and vehicle data.",
-    "description": "Automated PDF paperwork generation for a high-volume auto dealership by mapping structured customer and vehicle data into standardized form templates. Added validation for required fields, dates, and pricing to cut manual re-entry and reduce errors in day-to-day workflows.",
-    "longDescription": "Automated PDF paperwork generation from structured customer and vehicle data for Sherwood Park Toyota, AB. Programmatic PDF form filling mapped to standardized document templates. Implemented validation and normalization (required fields, dates, pricing, input cleanup) to prevent errors. Consolidated multi-form manual entry into a single streamlined input workflow.",
     "year": "2025",
-    "stack": [
-      "Python",
-      "PDF form filling",
-      "Automation"
-    ],
-    "valueProp": "Generate clean dealership PDFs automatically from structured customer and vehicle data.",
-    "status": "Client project",
-    "highlights": [
-      "Mapped structured customer and vehicle data into standardized PDF templates",
-      "Added validation for required fields, dates, and pricing",
-      "Collapsed multi-form manual entry into one streamlined workflow"
-    ],
-    "nextSteps": [
-      "Add monitoring around error rates and form rejection reasons",
-      "Expose a simple API for other dealership tools to generate paperwork"
-    ],
-    "tags": [
-      "Python",
-      "PDF",
-      "Automation"
-    ],
+    "tags": ["Python", "PDF", "Automation"],
     "repoUrl": null,
     "demoUrl": null,
     "featured": false,
@@ -225,16 +75,11 @@
     "slug": "transaction-spending-tracker",
     "title": "Transaction & Spending Tracker",
     "caption": "Multi-source finance dashboard",
+    "metadataUrl": "/projects/transaction-spending-tracker/metadata.json",
+    "contentUrl": "/projects/transaction-spending-tracker/content.md",
     "shortDescription": "Built a finance dashboard that ingests transactions from multiple sources and aggregates spending by time and timezone.",
-    "description": "Built a React-based finance dashboard that ingests transactions from multiple sources and aggregates spending by day, week, and month across timezones. Designed data models and APIs to support flexible filtering and CSV-style exports for deeper analysis.",
-    "longDescription": "Built a finance app to ingest and track transactions and spending across multiple sources. Implemented dynamic aggregation logic by time resolution and timezone (e.g., daily/weekly/monthly rollups). Designed data models and APIs to support flexible grouping and querying over large transaction histories.",
     "year": "2025",
-    "tags": [
-      "React",
-      "JavaScript",
-      "Finance",
-      "Data"
-    ],
+    "tags": ["React", "JavaScript", "Finance", "Data"],
     "repoUrl": null,
     "demoUrl": null,
     "featured": false,
@@ -244,17 +89,12 @@
     "slug": "celestia-affirmations-astrology",
     "title": "Celestia",
     "caption": "Astrology + Daily Affirmations App",
-    "coverImageUrl": "/covers/celestia.jpg",
+    "coverImageUrl": "/projects/celestia-affirmations-astrology/cover.jpg",
+    "metadataUrl": "/projects/celestia-affirmations-astrology/metadata.json",
+    "contentUrl": "/projects/celestia-affirmations-astrology/content.md",
     "shortDescription": "Built with a friend as a side mobile app concept combining daily affirmations with personalized astrology content.",
-    "description": "Built and prototyped Celestia with a friend as a side mobile app that combines daily affirmations with personalized astrology content. Implemented Explore and content discovery UI (including a Masonry-style grid bottom sheet) and explored subscription and token-based content unlock models.",
-    "longDescription": "Built \"Celestia\" with a friend as a side project: a mobile app concept combining daily affirmations and astrology content. Designed the feature set and monetization options (subscriptions/tokens/content unlocks) and planned modular content delivery. Built UI work including an Explore bottom sheet with a Masonry grid layout, plus interaction polish and category-caption ideas.",
     "year": "2025",
-    "tags": [
-      "React Native",
-      "Mobile",
-      "UI/UX",
-      "Product"
-    ],
+    "tags": ["React Native", "Mobile", "UI/UX", "Product"],
     "repoUrl": null,
     "demoUrl": null,
     "featured": false,
@@ -264,38 +104,15 @@
     "slug": "protein-pdb-viewer",
     "title": "PDB Structure Viewer",
     "caption": "Secondary structure handling",
+    "metadataUrl": "/projects/protein-pdb-viewer/metadata.json",
+    "contentUrl": "/projects/protein-pdb-viewer/content.md",
     "shortDescription": "Prototyped a browser-based viewer for PDB files with helix/sheet visualization and secondary-structure annotations.",
-    "description": "Prototyped a browser-based PDB structure viewer that renders helices and sheets and overlays secondary-structure annotations. Explored frontend vs backend approaches for parsing PDB data and evaluated performance trade-offs for interactive visualization.",
-    "longDescription": "Prototyped a structure viewer workflow around PDB data, exploring how to represent helices/sheets and annotate structures. Evaluated frontend vs backend approaches for secondary-structure extraction and rendering performance.",
     "year": "2025",
-    "tags": [
-      "JavaScript",
-      "PDB",
-      "Visualization",
-      "Bioinformatics"
-    ],
+    "tags": ["JavaScript", "PDB", "Visualization", "Bioinformatics"],
     "repoUrl": null,
     "demoUrl": null,
     "featured": false,
     "category": "bio"
-  },
-  {
-    "slug": "chat-streaming-haptics",
-    "title": "Streaming Haptics Trigger",
-    "caption": "Haptics on stream start",
-    "shortDescription": "Added haptic feedback when chat message streaming begins to make the UI feel more responsive.",
-    "description": "Implemented a UX improvement that triggers haptic feedback when chat message streaming begins, making the interface feel more responsive and alive. Tuned timing and intensity so the effect is noticeable but not distracting.",
-    "longDescription": "Implemented a UX improvement: trigger haptic feedback when chat message streaming starts.",
-    "year": "2025",
-    "tags": [
-      "UX",
-      "Mobile",
-      "Haptics"
-    ],
-    "repoUrl": null,
-    "demoUrl": null,
-    "featured": false,
-    "category": "mini"
   },
   {
     "slug": "haulr-concrete-fleet",
@@ -305,89 +122,12 @@
     "metadataUrl": "/projects/haulr-concrete-fleet/metadata.json",
     "contentUrl": "/projects/haulr-concrete-fleet/content.md",
     "shortDescription": "Built a concrete ops platform for lead intake, quoting, scheduling, and job cost tracking.",
-    "description": "Haulr is a concrete operations platform spanning lead capture, quoting, job execution, and cost visibility. I built the product as a multi-app system (site, dashboard, admin) with a role-aware company model and production-ready workflow components for teams handling real deliveries.",
-    "longDescription": "Designed and built Haulr as a full-stack concrete logistics product with three app surfaces: customer site, operations dashboard, and admin tools. The dashboard supports company onboarding, lead intake, claim/archive workflows, job creation, materials/labour/expense tracking, scheduling, and client management. The backend uses callable function workflows, geocoding, and billing integrations, with a current backend modernization path underway to harden schema/migrations and improve long-term reliability.",
     "year": "2026",
-    "stack": [
-      "React",
-      "TypeScript",
-      "Vite",
-      "Tailwind CSS",
-      "shadcn/ui",
-      "Firebase Auth",
-      "Firestore",
-      "Firebase Cloud Functions",
-      "Stripe",
-      "Mapbox"
-    ],
-    "stackGroups": [
-      {
-        "label": "Frontend",
-        "items": ["React", "TypeScript", "Vite", "Tailwind CSS", "shadcn/ui"]
-      },
-      {
-        "label": "Backend",
-        "items": ["Firebase Auth", "Firestore", "Firebase Cloud Functions"]
-      },
-      {
-        "label": "Integrations",
-        "items": ["Stripe", "Mapbox"]
-      }
-    ],
-    "valueProp": "Purpose-built concrete workflow software: move from request to scheduled work with shared visibility across sales, ops, and field teams.",
-    "status": "Active rebuild",
-    "highlights": [
-      "Built a multi-tenant company model with memberships, roles, groups, and capability-based access controls",
-      "Implemented end-to-end lead lifecycle flows including create, update, claim, archive, and assignment paths",
-      "Shipped job-level operating tools for materials, labour, schedule events, expenses, files, and inventory allocation",
-      "Designed concrete-specific UI controls (slump, delay/retarder dosage, request detail patterns) for real operator workflows",
-      "Integrated billing flows and subscription state handling with Stripe-backed checkout and portal flows"
-    ],
-    "architectureNotes": [
-      "Multi-app architecture separates public acquisition, operations, and admin responsibilities",
-      "Backend callable workflows enforce business logic around company ownership, capability checks, and sensitive mutations",
-      "Data model supports both company-scoped operational records and user-scoped working datasets",
-      "Geocoding and billing integrations are treated as first-class parts of the workflow, not bolt-ons",
-      "Demo access (resets every 24 hours): Email: demo@haulrbc.com | Password: 124haurMe. You are welcome to explore and create users; please avoid making major changes."
-    ],
-    "challenges": [
-      "Balancing fast product iteration with schema consistency across evolving operational features",
-      "Maintaining clear permission boundaries across owners, members, and specialized role scopes",
-      "Reconciling legacy and newer data paths during ongoing backend modernization",
-      "Designing UI that is concrete-domain specific without sacrificing usability on mobile"
-    ],
-    "results": [
-      {
-        "label": "Scope delivered",
-        "value": "Multi-app, end-to-end concrete operations workflow"
-      },
-      {
-        "label": "Backend capability",
-        "value": "Role-aware company model with callable workflow enforcement"
-      },
-      {
-        "label": "Operational coverage",
-        "value": "Leads, jobs, scheduling, labour, materials, expenses, and billing in one system"
-      },
-      {
-        "label": "Product direction",
-        "value": "Actively hardening backend architecture for production-grade reliability"
-      }
-    ],
-    "nextSteps": [
-      "Complete backend migration hardening with stricter policy enforcement",
-      "Unify remaining legacy request paths into a single canonical lead pipeline",
-      "Expand dispatch and fleet-side execution tooling for live operations",
-      "Add deeper analytics around conversion, margin, and utilization"
-    ],
-    "tags": [
-      "React",
-      "TypeScript",
-      "Firebase",
-      "Operations",
-      "SaaS"
-    ],
-    "repoUrl": null,
+    "tags": ["React", "TypeScript", "Firebase", "Operations", "SaaS"],
+    "repoUrl": {
+      "label": "GitHub Repo",
+      "url": "https://github.com/zacharydagameiro/haulr"
+    },
     "demoUrl": {
       "label": "Live Dashboard",
       "url": "https://dashboard.haulrbc.com"
@@ -400,26 +140,15 @@
     "slug": "meiro-tigan",
     "title": "Meiro Tigan",
     "caption": "Lead gen website for concrete contractor",
-    "coverImageUrl": "/covers/meirotigan.jpg",
+    "coverImageUrl": "/projects/meiro-tigan/cover.jpg",
+    "metadataUrl": "/projects/meiro-tigan/metadata.json",
+    "contentUrl": "/projects/meiro-tigan/content.md",
     "shortDescription": "Built a responsive lead-gen site and quote form for a concrete contractor in the Lower Mainland.",
-    "description": "Built a responsive lead-generation website for Meiro Tigan, a concrete contractor in the Lower Mainland. Implemented service pages and a quote/contact flow that routes inquiries to email/CRM, with mobile-first layouts for homeowners browsing on phones.",
-    "longDescription": "Built a responsive business website for Meiro Tigan, a concrete and construction services company (foundations, slabs, driveways) serving the Lower Mainland and surrounding areas. Implemented service pages, contact/quote flow, and mobile-first UX to drive leads and quote requests; deployed with modern web tooling.",
     "year": "2025",
-    "tags": [
-      "React",
-      "Web",
-      "Responsive",
-      "Lead gen"
-    ],
-    "screenshots": [
-      {
-        "src": "/covers/meirotigan.jpg",
-        "alt": "Meiro Tigan website homepage",
-        "caption": "Homepage hero and lead-generation layout."
-      }
-    ],
+    "tags": ["React", "Web", "Responsive", "Lead gen"],
     "repoUrl": null,
     "demoUrl": {
+      "label": "Live Site",
       "url": "https://meirotigan.com"
     },
     "featured": false,
@@ -429,66 +158,14 @@
     "slug": "bc-ferries-terminal-booker",
     "title": "Ferry Terminal Booker",
     "caption": "File-backed reservation system (C)",
-    "coverImageUrl": "/covers/ferry-terminal-booker.jpg",
+    "coverImageUrl": "/projects/bc-ferries-terminal-booker/cover.jpg",
+    "metadataUrl": "/projects/bc-ferries-terminal-booker/metadata.json",
+    "contentUrl": "/projects/bc-ferries-terminal-booker/content.md",
     "shortDescription": "Built a C-based terminal reservation system for a mock BC Ferries client using file storage (no database) with search, edit/delete, payments, and occupancy checks.",
-    "description": "Built a ferry terminal booking system in C for a mock client (BC Ferries) as a school group project. Implemented file-backed persistence (no database) for customers, reservations, and payments. Supports creating customers, taking payments, checking sailing occupancy, and full reservation management (search, edit, delete).",
-    "longDescription": "Built a terminal-based ferry booking and reservation manager in C for a mock client (BC Ferries) as a school group project. Data is persisted using flat-file storage rather than a database, requiring careful record layouts, validation, and update patterns for edits and deletes. Implemented customer creation, reservation creation and lookup (by customer and reservation fields), edit/delete flows, payment capture, and occupancy checks to prevent overbooking. Designed the CLI menus and input validation to keep workflows fast for an operator at a terminal counter.",
     "year": "2025",
-    "stack": [
-      "C",
-      "File I/O",
-      "Data serialization",
-      "CLI"
-    ],
-    "valueProp": "Manage ferry customers, reservations, payments, and occupancy in a fast terminal workflow—backed by flat-file storage.",
-    "status": "School project",
-    "highlights": [
-      "Implemented file-backed persistence for customers, reservations, and payments (no database)",
-      "Built search flows to find reservations and customers quickly from terminal menus",
-      "Supported full reservation lifecycle: create, edit, delete, and payment capture",
-      "Added occupancy checks to prevent overbooking on sailings"
-    ],
-    "architectureSteps": [
-      "Menu UI",
-      "Validate Input",
-      "Read Files",
-      "Apply Update",
-      "Write Back",
-      "Report/Receipt"
-    ],
-    "architectureNotes": [
-      "Records are stored in flat files with explicit parsing/serialization logic",
-      "Edits/deletes handled via safe rewrite patterns to avoid corrupting stored data",
-      "Occupancy derived from reservation records to enforce capacity constraints"
-    ],
-    "challenges": [
-      "Keeping file updates safe and consistent without a database transaction layer",
-      "Designing record formats that support lookup + edits without becoming brittle",
-      "Ensuring input validation prevents invalid states (dates, capacities, payment totals)"
-    ],
-    "results": [
-      {
-        "label": "Persistence",
-        "value": "Flat-file storage (no DB)"
-      },
-      {
-        "label": "Core features",
-        "value": "Search, edit/delete, payments, occupancy checks"
-      },
-      "Supports customer creation and reservation management end-to-end via CLI"
-    ],
-    "nextSteps": [
-      "Add automated tests for parsing/serialization and update flows",
-      "Introduce an indexing file to speed up reservation searches",
-      "Add export/report generation for daily sailings and revenue summaries"
-    ],
-    "tags": [
-      "C",
-      "File I/O",
-      "CLI",
-      "School"
-    ],
+    "tags": ["C", "File I/O", "CLI", "School"],
     "repoUrl": {
+      "label": "GitHub Repo",
       "url": "https://github.com/zacharydagameiro/Ferry"
     },
     "demoUrl": null,

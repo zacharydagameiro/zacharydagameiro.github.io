@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import aboutData from '../data/about.json'
 import Modal from '../components/Modal.jsx'
+import MarkdownContent from '../components/MarkdownContent.jsx'
 import SidebarCard from '../components/sidebar/SidebarCard'
 import ProfileSidebarCore from '../components/sidebar/ProfileSidebarCore'
 import { ABOUT_LAST_UPDATED } from '../data/siteMeta'
@@ -15,8 +16,31 @@ const bio = aboutData.bio ?? aboutData.about
 const bioParagraphs = Array.isArray(bio) ? bio : bio ? [bio] : []
 
 export default function About() {
+  const [aboutMarkdown, setAboutMarkdown] = useState('')
+
   useEffect(() => {
     document.title = 'About | Zachary Gameiro'
+  }, [])
+
+  useEffect(() => {
+    let isCanceled = false
+
+    const loadAboutMarkdown = async () => {
+      try {
+        const response = await fetch(resolveAssetUrl('/about/content.md'))
+        if (!response.ok) return
+        const markdown = await response.text()
+        if (!isCanceled) setAboutMarkdown(markdown)
+      } catch (error) {
+        if (!isCanceled) setAboutMarkdown('')
+      }
+    }
+
+    loadAboutMarkdown()
+
+    return () => {
+      isCanceled = true
+    }
   }, [])
 
   const [selectedEducation, setSelectedEducation] = useState(null)
@@ -84,20 +108,26 @@ export default function About() {
         {/* Main column */}
         <main className="space-y-10">
           {/* Bio */}
-          {bioParagraphs.length > 0 && (
+          {(aboutMarkdown.trim().length > 0 || bioParagraphs.length > 0) && (
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-base font-semibold text-slate-900">About me</h2>
-              <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-600">
-                {bioParagraphs.map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
-              </div>
+              {aboutMarkdown.trim().length > 0 ? (
+                <MarkdownContent markdown={aboutMarkdown} />
+              ) : (
+                <>
+                  <h2 className="text-base font-semibold text-slate-900">About me</h2>
+                  <div className="mt-3 space-y-3 text-sm leading-relaxed text-slate-600">
+                    {bioParagraphs.map((para, i) => (
+                      <p key={i}>{para}</p>
+                    ))}
+                  </div>
+                </>
+              )}
             </section>
           )}
 
           {/* Education */}
           {education.length > 0 && (
-            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <section>
               <div className="flex items-center gap-2">
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
                   🎓
@@ -105,13 +135,17 @@ export default function About() {
                 <h2 className="text-base font-semibold text-slate-900">Education</h2>
               </div>
 
-              <ul className="mt-5 space-y-4">
+              <ul className="relative mt-5 space-y-4 before:absolute before:bottom-2 before:left-5 before:top-2 before:w-px before:bg-slate-200">
                 {education.map((item, i) => (
-                  <li key={i}>
+                  <li key={i} className="relative pl-12">
+                    <span
+                      className="absolute left-[13px] top-5 z-10 h-4 w-4 rounded-full border-4 border-white bg-slate-400 shadow-sm"
+                      aria-hidden
+                    />
                     <button
                       type="button"
                       onClick={() => handleEducationClick(item)}
-                      className="group w-full text-left rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
+                      className="group w-full text-left rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
                     >
                       <div className="flex items-start gap-3">
                         {item.logoUrl && (
@@ -130,11 +164,10 @@ export default function About() {
                             {item.year ? ` · ${item.year}` : ''}
                           </p>
                           {(item.summary || item.details) && (
-                            <p className="mt-2 text-sm text-slate-500 leading-relaxed line-clamp-2">
+                            <p className="mt-1.5 text-sm text-slate-500 leading-relaxed line-clamp-2">
                               {item.summary || item.details}
                             </p>
                           )}
-                          <p className="mt-2 text-xs font-medium text-blue-600">View more details</p>
                         </div>
                       </div>
                     </button>
@@ -146,7 +179,7 @@ export default function About() {
 
           {/* Experience */}
           {experience.length > 0 && (
-            <section id="experience" className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 scroll-mt-24">
+            <section id="experience" className="scroll-mt-24">
               <div className="flex items-center gap-2">
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
                   💼
@@ -154,13 +187,17 @@ export default function About() {
                 <h2 className="text-base font-semibold text-slate-900">Experience</h2>
               </div>
 
-              <ul className="mt-5 space-y-4">
+              <ul className="relative mt-5 space-y-4 before:absolute before:bottom-2 before:left-5 before:top-2 before:w-px before:bg-slate-200">
                 {experience.map((item, i) => (
-                  <li key={i}>
+                  <li key={i} className="relative pl-12">
+                    <span
+                      className="absolute left-[13px] top-5 z-10 h-4 w-4 rounded-full border-4 border-white bg-slate-400 shadow-sm"
+                      aria-hidden
+                    />
                     <button
                       type="button"
                       onClick={() => handleExperienceClick(item)}
-                      className="w-full text-left rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
+                      className="w-full text-left rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
                     >
                       <div className="flex items-start gap-3">
                         {item.logoUrl && (
@@ -176,11 +213,10 @@ export default function About() {
                           </p>
                           {item.dates && <p className="mt-0.5 text-sm text-slate-500">{item.dates}</p>}
                           {item.description && (
-                            <p className="mt-2 text-sm text-slate-600 leading-relaxed line-clamp-2">
+                            <p className="mt-1.5 text-sm text-slate-600 leading-relaxed line-clamp-2">
                               {item.description}
                             </p>
                           )}
-                          <p className="mt-2 text-xs font-medium text-blue-600">View more details</p>
                         </div>
                       </div>
                     </button>
@@ -268,7 +304,7 @@ export default function About() {
                             <span className="flex min-w-0 items-center gap-2">
                               <span className="truncate font-medium">{resume.title}</span>
                               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
-                                {resume.label}
+                                PDF
                               </span>
                             </span>
                             <span className="ml-2 text-slate-400" aria-hidden>

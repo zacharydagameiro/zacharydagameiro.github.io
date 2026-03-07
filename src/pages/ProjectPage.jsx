@@ -158,8 +158,6 @@ const normalizeProjectMediaItems = (entries, projectRootPath) => {
     .map(({ sortOrder, ...item }) => item)
 }
 
-const MARKDOWN_ENABLED_SLUGS = new Set(['haulr-concrete-fleet', 'receipt-ocr-transactions'])
-
 const renderInlineMarkdown = (text, keyPrefix) => {
   if (typeof text !== 'string' || text.length === 0) return null
 
@@ -349,7 +347,7 @@ export default function ProjectPage() {
   const location = useLocation()
   const backToProjectsUrl = location.search ? `/projects${location.search}` : '/projects'
   const baseProject = projectsData.find((p) => p.slug === slug)
-  const isMarkdownProject = MARKDOWN_ENABLED_SLUGS.has(slug)
+  const isMarkdownProject = Boolean(baseProject?.metadataUrl || baseProject?.contentUrl)
   const [markdownProjectMeta, setMarkdownProjectMeta] = useState(null)
   const [markdownBody, setMarkdownBody] = useState('')
   const [isMarkdownLoading, setIsMarkdownLoading] = useState(false)

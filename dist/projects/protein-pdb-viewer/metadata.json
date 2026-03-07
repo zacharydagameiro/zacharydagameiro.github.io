@@ -1,0 +1,12 @@
+{
+  "slug": "protein-pdb-viewer",
+  "title": "PDB Structure Viewer",
+  "caption": "Secondary structure handling",
+  "shortDescription": "Prototyped a browser-based viewer for PDB files with helix/sheet visualization and secondary-structure annotations.",
+  "year": "2025",
+  "repoUrl": null,
+  "demoUrl": null,
+  "tags": ["JavaScript", "PDB", "Visualization", "Bioinformatics"],
+  "featured": false,
+  "category": "bio"
+}
