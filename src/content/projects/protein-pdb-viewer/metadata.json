@@ -1,14 +1,20 @@
 {
-  "title": "PDB Structure Viewer",
+  "title": "Protein Workbench",
   "caption": "Protein Structure Visualization",
   "coverImageUrl": "/projects/protein-pdb-viewer/cover.jpg",
   "shortDescription": "Built a browser-based PDB viewer with secondary-structure visualization.",
   "description": "Built a browser-based protein structure viewer for PDB files with secondary-structure visualization and interactive molecular inspection.",
   "year": "2025",
   "tags": ["JavaScript", "PDB", "Visualization", "Bioinformatics"],
-  "repoUrl": null,
-  "demoUrl": null,
-  "featured": false,
+  "repoUrl": {
+    "label": "GitHub Repo",
+    "url": "https://github.com/zacharydagameiro/protein-workbench"
+  },
+  "demoUrl": {
+    "label": "Live Demo",
+    "url": "https://zacharydagameiro.github.io/protein-workbench/"
+  },
+  "featured": true,
   "category": "bio",
   "categories": ["bio", "web"]
 }
