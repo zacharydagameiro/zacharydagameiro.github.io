@@ -5,6 +5,28 @@
   "shortDescription": "Built a browser-based PDB viewer with secondary-structure visualization.",
   "description": "Built a browser-based protein structure viewer for PDB files with secondary-structure visualization and interactive molecular inspection.",
   "year": "2025",
+  "screenshots": [
+    {
+      "src": "/projects/protein-pdb-viewer/media/protein-workbench-img1.jpg",
+      "type": "image",
+      "caption": "Protein structure viewer interface"
+    },
+    {
+      "src": "/projects/protein-pdb-viewer/media/protein-workbench-img2.jpg",
+      "type": "image",
+      "caption": "Secondary structure visualization"
+    },
+    {
+      "src": "/projects/protein-pdb-viewer/media/protein-workbench-img3.jpg",
+      "type": "image",
+      "caption": "Interactive molecular inspection"
+    },
+    {
+      "src": "/projects/protein-pdb-viewer/media/protein-workbench-img4.jpg",
+      "type": "image",
+      "caption": "Protein Workbench view"
+    }
+  ],
   "tags": ["JavaScript", "PDB", "Visualization", "Bioinformatics"],
   "repoUrl": {
     "label": "GitHub Repo",
